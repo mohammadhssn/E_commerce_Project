@@ -1,0 +1,33 @@
+{% extends 'account/sub_base.html' %}
+
+{% block title %}Verify Account{% endblock %}
+{% block sub_content %}
+
+    <form class="account-form" action="." method="post">
+        {% csrf_token %}
+        <h3 class="mb-2">Verify Account</h3>
+        <p class="mb-4">It's free and only takes a minute.</p>
+
+        {% if form.errors %}
+            <p>Please correct the following errors:</p>
+            {% for field in form %}
+                {% if field.errors %}
+                    <div class="alert alert-primary" role="alert">
+                        {{ field.label }}: {{ field.errors|striptags }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <label>{{ form.code.label }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-muted mb-4">
+      </span>
+        </label>
+        {{ form.code }}<br><br>
+
+        <button class="btn btn-primary btn-block py-2 mb-4 mt-5 fw500 w-100" type="submit">Verify</button>
+        <p class="text-center">
+            <a href="">Already have an account?</a>
+        </p>
+    </form>
+
+{% endblock %}
