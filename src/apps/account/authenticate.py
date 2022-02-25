@@ -2,6 +2,9 @@ from django.contrib.auth import get_user_model
 
 
 class PhoneAuthBackend:
+    """
+        Custom Authenticate with phone number
+    """
 
     def authenticate(self, request, username=None, password=None):
         try:

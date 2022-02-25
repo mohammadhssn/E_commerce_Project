@@ -143,3 +143,7 @@ AUTHENTICATION_BACKENDS = [
     # 'django.contrib.auth.backends.ModelBackend',
     'apps.account.authenticate.PhoneAuthBackend',
 ]
+
+# Config Session
+
+SESSION_COOKIE_AGE = 30 * 60  # 20 minutes

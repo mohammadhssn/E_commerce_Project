@@ -1,7 +1,14 @@
+from django.shortcuts import get_object_or_404
+
+from apps.account.models import OtpCode
 from apps.melipayamak import Api
 
 
 def send_otp_code(phone_number, code):
+    """
+        Send code to user for registering
+        use in: app account - views.py
+    """
     username = '09192311248'
     password = 'F7O1M'
     api = Api(username, password)
@@ -13,12 +20,29 @@ def send_otp_code(phone_number, code):
     print('*' * 90)
     print(response)
 
-# from kavenegar import *
-#
-#
-# def send_otp_code(phone_number, code):
-#     api = KavenegarAPI('6E39745035626359304A6275577A787A755041782F39553545493470444263417A57584F5348716D44556B3D')
-#     params = {'sender': '', 'receptor': '09379621925', 'message': '.وب سرویس پیام کوتاه کاوه نگار'}
-#     response = api.sms_send(params)
-#     print('*' * 90)
-#     print(response)
+
+def get_instance_otpcode_from_session(instance_session=None):
+    """
+        get obj from OtpCode model
+        use in: app account - views.py
+    """
+    try:
+        code_instance = get_object_or_404(OtpCode, phone_number=instance_session.get('phone_number'))
+    except OtpCode.MultipleObjectsReturned:
+        query = OtpCode.objects.filter(phone_number=instance_session.get('phone_number'))
+        code_instance = query.last()
+        query.exclude(code=code_instance.code).delete()
+
+    return code_instance
+
+
+def delete_session_key(request=None, key=None):
+    """
+        delete session key
+        use in: app account - views.py
+    """
+    try:
+        del request.session[key]
+        request.session.modified = True
+    except Exception:
+        pass

@@ -18,16 +18,17 @@
             {% endfor %}
         {% endif %}
 
-        <label>{{ form.phone.label }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-muted mb-4">
+        <label>{{ form.phone.label }}<span class="text-muted mb-4">
       </span>
         </label>
-        {{ form.phone }}<br><br>
+        {{ form.phone }}
         <label>{{ form.password.label }}<span class="text-muted mb-4">
     </span></label>
         {{ form.password }}
 
         <button class="btn btn-primary btn-block py-2 mb-4 mt-5 fw500 w-100" type="submit">Login</button>
         <p class="text-center">
+            <a href="{% url 'account:forget_password' %}">forget password?</a><br><br>
             <a href="{% url 'account:register' %}">Register an account?</a>
         </p>
     </form>

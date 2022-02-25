@@ -10,6 +10,9 @@ from .models import phone_regex
 
 
 class UserCreationForm(forms.ModelForm):
+    """
+        For create new user in admin-panel
+    """
     password1 = forms.CharField(label=_('password'), validators=[validate_password], widget=forms.PasswordInput)
     password2 = forms.CharField(label=_('confirm password'), widget=forms.PasswordInput)
 
@@ -19,7 +22,7 @@ class UserCreationForm(forms.ModelForm):
 
     def clean_password2(self):
         cd = self.cleaned_data
-        if cd['password1'] and cd['password2'] and cd['password1'] != cd['password2']:
+        if cd.get('password1') and cd.get('password2') and cd.get('password1') != cd.get('password2'):
             raise ValidationError(_('passwords dont match'))
         return cd['password2']
 
@@ -32,6 +35,9 @@ class UserCreationForm(forms.ModelForm):
 
 
 class UserChangeForm(forms.ModelForm):
+    """
+        For update user in admin-panel
+    """
     password = ReadOnlyPasswordHashField(
         help_text=_("you can change password using <a href=\"../password/\">this form</a>."))
 
@@ -40,14 +46,18 @@ class UserChangeForm(forms.ModelForm):
         fields = ('email', 'phone_number', 'full_name', 'password', 'last_login')
 
 
+# @@@@@@@@@@@@@@@@@
 class UserRegistrationForm(forms.Form):
+    """
+        For create new user with phone-number
+    """
     phone = forms.CharField(label=_('Phone'), max_length=12, validators=[phone_regex])
-    password1 = forms.CharField(label=_('password'), validators=[validate_password], widget=forms.PasswordInput)
+    password = forms.CharField(label=_('password'), validators=[validate_password], widget=forms.PasswordInput)
     password2 = forms.CharField(label=_('confirm password'), widget=forms.PasswordInput)
 
     def clean_password2(self):
         cd = self.cleaned_data
-        if cd.get('password1') and cd.get('password2') and cd.get('password1') != cd.get('password2'):
+        if cd.get('password') and cd.get('password2') and cd.get('password') != cd.get('password2'):
             raise ValidationError(_('passwords dont match'))
         return cd.get('password2')
 
@@ -58,11 +68,88 @@ class UserRegistrationForm(forms.Form):
             raise ValidationError(_('phone is already! try another phone number'))
         return phone
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['phone'].widget.attrs.update(
+            {'class': 'form-control mb-3', 'placeholder': 'phone'})
+        self.fields['password'].widget.attrs.update(
+            {'class': 'form-control mb-3', 'placeholder': 'Password'})
+        self.fields['password2'].widget.attrs.update(
+            {'class': 'form-control', 'placeholder': 'Repeat Password'})
+
 
 class VerifyCodeForm(forms.Form):
+    """
+        get code for complete registry
+    """
     code = forms.CharField(max_length=6)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['code'].widget.attrs.update(
+            {'class': 'form-control mb-3', 'placeholder': 'code'}
+        )
 
 
 class UserLoginForm(forms.Form):
+    """
+        login a user
+    """
     phone = forms.CharField(label=_('Phone'), max_length=12, validators=[phone_regex])
     password = forms.CharField(label=_('password'), widget=forms.PasswordInput)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['phone'].widget.attrs.update(
+            {'class': 'form-control mb-3', 'placeholder': 'phone'})
+        self.fields['password'].widget.attrs.update(
+            {'class': 'form-control mb-3', 'placeholder': 'Password'})
+
+
+class ForgettingPasswordForm(forms.Form):
+    """
+        get phone_number for reset_password
+    """
+    phone = forms.CharField(label=_('Phone'), max_length=12, validators=[phone_regex])
+
+    def clean_phone(self):
+        phone = self.cleaned_data.get('phone')
+        try:
+            get_user_model().objects.get(phone_number=phone)
+        except get_user_model().DoesNotExist:
+            raise ValidationError(_('Account not Found! try again Or Register to site'))
+        return phone
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['phone'].widget.attrs.update(
+            {'class': 'form-control mb-3', 'placeholder': 'phone'})
+
+
+class VerifyCodePasswordForm(VerifyCodeForm):
+    """
+        get code for complete reset password
+        Inherit from VerifyCodeForm
+    """
+    pass
+
+
+class RestPasswordDoneForm(forms.Form):
+    """
+        Change password completely
+    """
+    password = forms.CharField(label=_('password'), validators=[validate_password], widget=forms.PasswordInput)
+    password2 = forms.CharField(label=_('confirm password'), widget=forms.PasswordInput)
+
+    def clean_password2(self):
+        cd = self.cleaned_data
+        if cd.get('password') and cd.get('password2') and cd.get('password') != cd.get('password2'):
+            raise ValidationError(_('passwords dont match'))
+        return cd.get('password2')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['password'].widget.attrs.update(
+            {'class': 'form-control mb-3', 'placeholder': 'Password'})
+        self.fields['password2'].widget.attrs.update(
+            {'class': 'form-control', 'placeholder': 'Repeat Password'})

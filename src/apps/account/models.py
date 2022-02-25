@@ -12,6 +12,9 @@ phone_regex = RegexValidator(
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    """
+        Create Custom User
+    """
     phone_number = models.CharField(
         max_length=12, unique=True, validators=[phone_regex], verbose_name=_('Phone number')
     )
@@ -45,6 +48,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class OtpCode(models.Model):
+    """
+        Create otpcode for login wuth phone number
+    """
     phone_number = models.CharField(
         max_length=12, validators=[phone_regex], verbose_name=_("phone"),
     )
