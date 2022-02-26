@@ -54,9 +54,9 @@ class OtpCode(models.Model):
     phone_number = models.CharField(
         max_length=12, validators=[phone_regex], verbose_name=_("phone"),
     )
-    code = models.CharField(max_length=6)
-    verify = models.BooleanField(default=False, verbose_name=_("is verify"))
-    created = models.DateTimeField(auto_now=True)
+    code = models.CharField(max_length=6, verbose_name=_('code'))
+    created = models.DateTimeField(auto_now=True, verbose_name=_('created'))
+    expire_time = models.DateTimeField(default=timezone.now, verbose_name=_('expire_time'))
 
     def __str__(self):
         return self.phone_number

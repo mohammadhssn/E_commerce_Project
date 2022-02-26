@@ -8,7 +8,7 @@ from .forms import UserCreationForm, UserChangeForm
 
 @admin.register(OtpCode)
 class OtpCodeAdmin(admin.ModelAdmin):
-    list_display = ('phone_number', 'code', 'created')
+    list_display = ('phone_number', 'code', 'created', 'expire_time')
 
 
 class UserAdmin(BaseUserAdmin):

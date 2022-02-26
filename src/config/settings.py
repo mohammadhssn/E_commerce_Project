@@ -118,7 +118,7 @@ PASSWORD_HASHERS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
@@ -146,4 +146,4 @@ AUTHENTICATION_BACKENDS = [
 
 # Config Session
 
-SESSION_COOKIE_AGE = 30 * 60  # 20 minutes
+SESSION_COOKIE_AGE = 43800 * 60  # 1 month

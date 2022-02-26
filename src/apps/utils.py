@@ -15,7 +15,7 @@ def send_otp_code(phone_number, code):
     sms = api.sms()
     to = phone_number
     _from = '50004001311248'
-    text = f'کد تایید شما : {code}'
+    text = f' :کد تایید شما {code}\n مدت زمان انقظا ۵ دقیقه.'
     response = sms.send(to, _from, text)
     print('*' * 90)
     print(response)

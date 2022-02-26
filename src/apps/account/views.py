@@ -1,6 +1,7 @@
 import random
 
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
 from django.views import View
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
@@ -39,9 +40,11 @@ class Register(View):
 
             random_code = random.randint(100000, 999999)
             random_code = str(random_code)
-            send_otp_code(phone, random_code)
+            # send_otp_code(phone, random_code)
             print(random_code)
-            OtpCode.objects.create(phone_number=phone, code=random_code)
+            otp_code = OtpCode.objects.create(phone_number=phone, code=random_code)
+            otp_code.expire_time += timezone.timedelta(minutes=5)
+            otp_code.save()
             request.session['user_registration_info'] = {
                 'phone_number': phone,
                 'password': password,
@@ -71,20 +74,26 @@ class UserRegisterVerifyCodeView(CheckAccessTpPageWithSessionMixins, View):
         form = self.form_class(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
-            if cd.get('code') == code_instance.code:
-                user = get_user_model().objects.create_user(phone_number=user_session.get('phone_number'),
-                                                            password=user_session.get('password'))
+            if code_instance.expire_time > timezone.now():
+                if cd.get('code') == code_instance.code:
+                    user = get_user_model().objects.create_user(phone_number=user_session.get('phone_number'),
+                                                                password=user_session.get('password'))
 
-                user.is_active = True
-                user.save()
-                login(request, user)
+                    user.is_active = True
+                    user.save()
+                    login(request, user)
+                    code_instance.delete()
+                    delete_session_key(request, 'user_registration_info')
+                    messages.success(request, _('you registered. and loggen in successfully'), 'success')
+                    return redirect('catalogue:home')
+                else:
+                    messages.error(request, _('this code is wrong'), 'danger')
+                    return redirect('account:verify')
+            else:
                 code_instance.delete()
                 delete_session_key(request, 'user_registration_info')
-                messages.success(request, _('you registered. and loggen in successfully'), 'success')
-                return redirect('catalogue:home')
-            else:
-                messages.error(request, _('this code is wrong'), 'danger')
-                return redirect('account:verify')
+                messages.warning(request, 'code is expire . Try Again', 'warning')
+                return redirect('account:register')
 
         return redirect('catalogue:home')
 
@@ -136,9 +145,11 @@ class ForgettingPasswordView(View):
             if user is not None:
                 random_code = random.randint(100000, 999999)
                 random_code = str(random_code)
-                send_otp_code(phone, random_code)
+                # send_otp_code(phone, random_code)
                 print(random_code)
-                OtpCode.objects.create(phone_number=phone, code=random_code)
+                otp_code = OtpCode.objects.create(phone_number=phone, code=random_code)
+                otp_code.expire_time += timezone.timedelta(minutes=2)
+                otp_code.save()
                 request.session['user_forgetting_password'] = {
                     'phone_number': phone,
                 }
@@ -171,14 +182,19 @@ class ResetPasswordView(CheckAccessTpPageWithSessionMixins, View):
         form = self.form_class(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
-            if cd.get('code') == code_instance.code:
-                code_instance.delete()
-                messages.success(request, 'now change password!', 'success')
-                return redirect('account:reset_password_done')
+            if code_instance.expire_time > timezone.now():
+                if cd.get('code') == code_instance.code:
+                    code_instance.delete()
+                    messages.success(request, 'now change password!', 'success')
+                    return redirect('account:reset_password_done')
+                else:
+                    messages.error(request, _('this code is wrong'), 'danger')
+                    return redirect('account:reset_password')
             else:
-                messages.error(request, _('this code is wrong Or Expire Time'), 'danger')
-                return redirect('account:reset_password')
-
+                code_instance.delete()
+                delete_session_key(request, 'user_forgetting_password')
+                messages.warning(request, 'code is expire . Try Again', 'warning')
+                return redirect('account:register')
         return redirect('catalogue:home')
 
 
