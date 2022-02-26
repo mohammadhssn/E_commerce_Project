@@ -43,7 +43,7 @@ class Register(View):
             # send_otp_code(phone, random_code)
             print(random_code)
             otp_code = OtpCode.objects.create(phone_number=phone, code=random_code)
-            otp_code.expire_time += timezone.timedelta(minutes=5)
+            otp_code.expire_time += timezone.timedelta(minutes=3)
             otp_code.save()
             request.session['user_registration_info'] = {
                 'phone_number': phone,
@@ -148,7 +148,7 @@ class ForgettingPasswordView(View):
                 # send_otp_code(phone, random_code)
                 print(random_code)
                 otp_code = OtpCode.objects.create(phone_number=phone, code=random_code)
-                otp_code.expire_time += timezone.timedelta(minutes=2)
+                otp_code.expire_time += timezone.timedelta(minutes=3)
                 otp_code.save()
                 request.session['user_forgetting_password'] = {
                     'phone_number': phone,

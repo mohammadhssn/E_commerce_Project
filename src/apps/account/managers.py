@@ -1,14 +1,29 @@
 from django.contrib.auth.models import BaseUserManager
+from django.core.validators import RegexValidator
 from django.utils.translation import gettext_lazy as _
+from django.core.exceptions import ValidationError
+
+phone_regex = RegexValidator(
+    regex=r"^(?:98|\+98|0098|0)?9[0-9]{9}$", message=_("Invalid phone number.")
+)
 
 
 class UserManager(BaseUserManager):
+
+    def validate_phone_number(self, phone_number):
+        try:
+            phone_regex(phone_number)
+        except ValidationError:
+            raise ValueError(_('You must enter correct format.'))
+
     def create_user(self, phone_number, password, **extra_fields):
         """
             Create a new user with phone number
         """
-        if not phone_number:
-            raise ValueError('The given phone must be set')
+        if phone_number:
+            self.validate_phone_number(phone_number)
+        else:
+            raise ValueError(_('The given phone must be set'))
 
         user = self.model(phone_number=phone_number, **extra_fields)
         email = extra_fields.get('email')
