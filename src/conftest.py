@@ -29,3 +29,27 @@ def admin_user(db, user_factory):
 def otp_code(db, otp_code_factory):
     otp_code = otp_code_factory.create()
     return otp_code
+
+
+# Session [user_registration_info]
+@pytest.fixture
+def set_session_user_info(db, client):
+    session = client.session
+    session['user_registration_info'] = {
+        'phone_number': '09192311248',
+        'password': '@testpass1',
+        'password2': '@testpass1',
+    }
+    session.save()
+    yield session
+    del session
+
+
+@pytest.fixture
+def set_session_reset_password(db, client):
+    session = client.session
+    session['user_forgetting_password'] = {
+        'phone_number': '09192311248',
+    }
+    session.save()
+    return session
