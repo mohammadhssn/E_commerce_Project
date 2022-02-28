@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     # Local apps
     'apps.account.apps.AccountConfig',
     'apps.catalogue.apps.CatalogueConfig',
+    # Third-party apps
+    'mptt',
 ]
 
 MIDDLEWARE = [
