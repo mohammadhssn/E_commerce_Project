@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from mptt.models import MPTTModel, TreeForeignKey, TreeManyToManyField
@@ -31,13 +32,17 @@ class Category(MPTTModel):
     )
     parent = TreeForeignKey(
         'self',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name='children',
         null=True,
         blank=True,
         unique=False,
         verbose_name=_('parent of category'),
         help_text=_('format: not required')
+    )
+    is_sub = models.BooleanField(
+        default=False,
+        verbose_name=_('category is sub?')
     )
 
     class MPTTMeta:
@@ -102,6 +107,9 @@ class Product(models.Model):
         verbose_name=_('date product created'),
         help_text=_('format Y-m-d H:M:S')
     )
+
+    def get_absolute_url(self):
+        return reverse('catalogue:product_detail', args=[self.web_id])
 
     def __str__(self):
         return self.name
@@ -320,7 +328,7 @@ class Media(models.Model):
         on_delete=models.CASCADE,
         related_name='media_product_inventory'
     )
-    img_url = models.ImageField(
+    image = models.ImageField(
         unique=False,
         null=False,
         blank=False,

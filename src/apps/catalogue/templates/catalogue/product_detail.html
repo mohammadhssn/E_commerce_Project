@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block stylesheet %}{% static 'catalogue/css/catalogue.css' %}{% endblock %}
+
+{% block title %}
+    {% if product %}{{ product.title }}{% else %}{% trans 'Product' %}{% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% include 'inc/messages.html' %}
+        <div class="row g-3">
+            <div class="col-md-5 ps-3 col-lg-5 order-md-last p-0 order-1">
+                <div class="d-grid gap-2">
+                    <div class="d-flex d-flex-inline justify-content-between">
+                        <div><span class="h3">£{{ product.store_price }}</span>
+                            <p class="text-muted">{% trans 'includes tax' %}</p></div>
+                        <div>
+                            <label for="select">{% trans 'Qty' %}</label>
+                            <select id="select" class="h6 store-select-dropdown">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <ul>
+                        {% for p_attribute in product_type_attributes %}
+                            <li class="text-capitalize">
+                                {{ p_attribute.product_attribute__name }}
+                                <ul>
+                                    {% for p_attr_value in product_attribute_values %}
+                                        {% if p_attr_value.attribute_values__product_attribute__name == p_attribute.product_attribute__name %}
+                                            <li class="text-capitalize">
+                                                {% if p_attr_value.attribute_values__attribute_value in product.field_a %}
+                                                    <div id="target-{{ p_attr_value.attribute_values__attribute_value }}"
+                                                         class="selected fw-bold"
+                                                         data-attribute="{{ p_attribute.product_attribute__name }}"
+                                                         value="{{ p_attr_value.attribute_values__attribute_value }}">{{ p_attr_value.attribute_values__attribute_value }}</div>
+                                                {% else %}
+                                                    <div id="target-{{ p_attr_value.attribute_values__attribute_value }}"
+                                                         class=""
+                                                         data-attribute="{{ p_attribute.product_attribute__name }}"
+                                                         value="{{ p_attr_value.attribute_values__attribute_value }}">{{ p_attr_value.attribute_values__attribute_value }}</div>
+                                                {% endif %}
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <hr>
+                    <button type="button" id="add-button" value="{{ product.id }}"
+                            class="btn btn-success fw500">{% trans 'Add to basket' %}
+                    </button>
+                    <a href="#" class="btn btn-light fw500" role="button"
+                       aria-disabled="true">{% trans 'Add to Wish List' %}</a>
+                </div>
+            </div>
+            <div class="col-md-7 col-lg-7 p-0">
+                <div class="card mb-3 border-0">
+                    <div class="row g-0">
+                        <div class="col-md-12">
+                            <div class="card-body p-1">
+                                <h1 class="mb-0 h2 pe-4 pb-4">{{ product.product__name }}</h1>
+                                <div class="bg-light">
+
+
+                                    {% for image in product_image %}
+                                        {% if image.is_feature %}
+                                            <img class="img-fluid mx-auto d-block" width="200px"
+                                                 src="{{ image.image.url }}" alt="{{ image.alt_text }}">
+                                        {% else %}
+                                            <img class="img-fluid d-block-inline pt-3" width="100px"
+                                                 src="{{ image.image.url }}"
+                                                 alt="{{ image.image.alt_text }}">
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    {#    <script>#}
+    {#        $(document).on('click', '#add-button', function (e) {#}
+    {#            e.preventDefault();#}
+    {#            $.ajax({#}
+    {#                type: 'POST',#}
+    {#                url: '{% url "basket:basket_add" %}',#}
+    {#                data: {#}
+    {#                    productid: $('#add-button').val(),#}
+    {#                    productqty: $('#select option:selected').text(),#}
+    {#                    csrfmiddlewaretoken: "{{csrf_token}}",#}
+    {#                    action: 'post'#}
+    {#                },#}
+    {#                success: function (json) {#}
+    {#                    document.getElementById("basket-qty").innerHTML = json.qty#}
+    {#                },#}
+    {#                error: function (xhr, errmsg, err) {#}
+    {#                }#}
+    {#            });#}
+    {#        })#}
+    {#    </script>#}
+    <script>
+        var d = {}
+        let textBoxes = document.querySelectorAll('[id^=target]')
+
+        let e = 0
+        let f = textBoxes.length
+
+        for (let i in textBoxes) {
+            if (e < f) {
+                if (textBoxes[i].classList.contains("selected")) {
+                    d[textBoxes[i].getAttribute('data-attribute')] = textBoxes[i].getAttribute('value')
+
+                }
+            } else {
+                break
+            }
+            e++
+            console.log(d)
+        }
+
+        $('[id^=target]').click(function () {
+            const value = this.getAttribute('value');
+            d[this.getAttribute('data-attribute')] = this.getAttribute('value')
+            const querystring = buildUrlWithParams(d)
+            const url = window.location.href.split('?')[0]
+            window.location.href = url + "?" + querystring;
+        });
+
+        function buildUrlWithParams(data) {
+            var searchparams = [];
+            for (var d in data)
+                searchparams.push(d + '=' + data[d]);
+            return searchparams.join('&');
+        }
+
+    </script>
+{% endblock %}

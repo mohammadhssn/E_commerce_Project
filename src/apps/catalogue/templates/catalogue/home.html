@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 
 {% block title %}
-    Store
+    {% trans 'Store' %}
 {% endblock %}
 
 {% block content %}
@@ -12,33 +13,33 @@
             <div class="row">
                 <div class="album py-5">
                     <div class="pb-3">
-                        <h1 class="h3">Popular</h1>
+                        <h1 class="h3">{% trans 'Popular' %}</h1>
                     </div>
-                    {#                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">#}
-                    {#                        {% for product in products %}#}
-                    {#                            <div class="col">#}
-                    {#                                <div class="card border-0">#}
-                    {##}
-                    {#                                    {% for image in product.product_image.all %}#}
-                    {#                                        {% if image.is_feature %}#}
-                    {#                                            <img class="img-fluid" alt="Responsive image" src="{{ image.image.url }}"#}
-                    {#                                                 alt="{{ image.image.alt_text }}">#}
-                    {#                                        {% endif %}#}
-                    {#                                    {% endfor %}#}
-                    {##}
-                    {#                                    <div class="card-body px-0">#}
-                    {#                                        <p class="card-text">#}
-                    {#                                            <a class="text-dark text-decoration-none"#}
-                    {#                                               href=""></a>#}
-                    {#                                        </p>#}
-                    {#                                        <div class="fw-bold"></div>#}
-                    {#                                    </div>#}
-                    {#                                </div>#}
-                    {#                            </div>#}
-                    {#                        {% empty %}#}
-                    {#                            <div class="col-12">There are currently no products active</div>#}
-                    {#                        {% endfor %}#}
-                    {#                    </div>#}
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
+                        {% for product in products %}
+                            <div class="col">
+                                <div class="card border-0">
+
+                                    {% for image in product.media_product_inventory.all %}
+                                        {% if image.is_feature %}
+                                            <img class="img-fluid" src="{{ image.image.url }}"
+                                                 alt="{{ image.alt_text }}">
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    <div class="card-body px-0">
+                                        <p class="card-text">
+                                            <a class="text-dark text-decoration-none"
+                                               href="{% url 'catalogue:product_detail' product.product.web_id %}">{{ product.product.name }}</a>
+                                        </p>
+                                        <div class="fw-bold">$ {{ product.store_price }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="col-12">{% trans 'There are currently no products active' %}</div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>

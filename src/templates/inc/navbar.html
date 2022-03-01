@@ -1,3 +1,4 @@
+{% load i18n %}
 <header class="pb-3">
     <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom">
         <div class="container-fluid px-md-4">
@@ -15,7 +16,7 @@
                         <a class="nav-link dropdown-toggle d-none d-md-block fw500" href="#" id="navbarDropdown"
                            role="button"
                            data-bs-toggle="dropdown" aria-expanded="false">
-                            All
+                            {% trans 'All' %}
                             <i class="ps-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      class="bi bi-chevron-down" viewBox="0 0 16 16">
@@ -25,7 +26,7 @@
                             </i>
                         </a>
                         <ul class="dropdown-menu rounded-0 border-0" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="">All</a></li>
+                            <li><a class="dropdown-item" href="">{% trans 'All' %}</a></li>
                             {% for c in categories %}
                                 <li {% if category.slug == c.slug %}class="selected" {% endif %}>
                                     <a class="dropdown-item" href=""></a>
@@ -45,7 +46,7 @@
                                   d="M2.5 11.5A.5.5 0 0 1 3 11h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 3h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
                         </svg>
                     </div>
-                    <span class="fs15 fw500">Shop</span>
+                    <span class="fs15 fw500">{% trans 'Shop' %}</span>
                 </button>
                 <div>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent2">
@@ -54,35 +55,35 @@
                                 <a class="nav-link dropdown-toggle text-reset" href="#" id="navbarDropdown"
                                    role="button"
                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    <div class="small text-muted">Hello,
+                                    <div class="small text-muted">{% trans 'Hello,' %}
                                         {% if user.is_authenticated %}
                                             {{ request.user.name }}
                                         {% else %}
-                                            Login
+                                            {% trans 'Login' %}
                                         {% endif %}
                                     </div>
-                                    <span class="fs15 fw500">Account &amp; Lists
+                                    <span class="fs15 fw500">{% trans 'Account &amp; Lists' %}
                     </span>
                                     </span>
                                 </a>
                                 <div class="dropdown-menu rounded-0" aria-labelledby="navbarDropdown">
                                     <div class="card border-0">
                                         <div class="card-body">
-                                            <h6 class="card-title">My Account</h6>
+                                            <h6 class="card-title">{% trans 'My Account' %}</h6>
                                             <ul class="list-group list-group-flush dropdown-account-link">
                                                 {% if user.is_authenticated %}
                                                     <a href=""
-                                                       class="text-reset small list-group-item p-0 pb-1 border-0 dropdown-account-link">Your
-                                                        Account</a>
+                                                       class="text-reset small list-group-item p-0 pb-1 border-0 dropdown-account-link">{% trans 'Your Account' %}
+                                                    </a>
                                                     <a href=""
-                                                       class="text-reset small list-group-item p-0 pb-1 border-0 dropdown-account-link">Orders</a>
+                                                       class="text-reset small list-group-item p-0 pb-1 border-0 dropdown-account-link">{% trans 'Orders' %}</a>
                                                     <a href=""
-                                                       class="text-reset small list-group-item p-0 pb-1 border-0 dropdown-account-link">Logout</a>
+                                                       class="text-reset small list-group-item p-0 pb-1 border-0 dropdown-account-link">{% trans 'Logout' %}</a>
                                                 {% else %}
                                                     <a href="{% url 'account:register' %}"
-                                                       class="text-reset small list-group-item p-0 pb-1 border-0 dropdown-account-link">Register</a>
+                                                       class="text-reset small list-group-item p-0 pb-1 border-0 dropdown-account-link">{% trans 'Register' %}</a>
                                                     <a href="{% url 'account:login' %}"
-                                                       class="text-reset small list-group-item p-0 pb-1 border-0 dropdown-account-link">Login</a>
+                                                       class="text-reset small list-group-item p-0 pb-1 border-0 dropdown-account-link">{% trans 'Login' %}</a>
                                                 {% endif %}
                                             </ul>
                                         </div>
@@ -111,35 +112,12 @@
                                     d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
                         </svg>
                     </div>
-                    <span class="fs15 fw500">Basket</span>
+                    <span class="fs15 fw500">{% trans 'Basket' %}</span>
                 </a>
-            </div>
-            <div class="d-md-none d-lg-none d-xl-none">
-                <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                        <li><a class="dropdown-item" href="">All</a></li>
-                        {#                        {% for c in categories %}#}
-                        {#                            <li {% if category.slug == c.slug %}class="selected" {% endif %}>#}
-                        {#                                <a class="dropdown-item" href="{{ c.get_absolute_url }}">{{ c.name|title }}</a>#}
-                        {#                            </li>#}
-                        {#                        {% endfor %}#}
-                    </ul>
-                    {#                    <h6 class="card-title">My Account</h6>#}
-                    {#                    <ul class="list-group list-group-flush dropdown-account-link">#}
-                    {#                        {% if user.is_authenticated %}#}
-                    {#                            <a href="" class="dropdown-item">Your Account</a>#}
-                    {#                            <a href="" class="dropdown-item">Orders</a>#}
-                    {#                            <a href="" class="dropdown-item">Logout</a>#}
-                    {#                        {% else %}#}
-                    {#                            <a href="{% url 'account:register' %}" class="dropdown-item">Register</a>#}
-                    {#                            <a href="{% url 'account:login' %}" class="dropdown-item">Login</a>#}
-                    {#                        {% endif %}#}
-                    </ul>
-                </div>
             </div>
             <form class="d-flex w-100 d-md-none">
                 <input class="form-control me-2" type="search" placeholder="Search products or FAQ" aria-label="Search">
-                <button class="btn btn-outline-secondary" type="submit">Search</button>
+                <button class="btn btn-outline-secondary" type="submit">{% trans 'Search' %}</button>
             </form>
         </div>
     </nav>

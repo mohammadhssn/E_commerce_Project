@@ -67,3 +67,4 @@ class ProductMediaInline(admin.TabularInline):
 @admin.register(ProductInventory)
 class ProductInventoryAdmin(admin.ModelAdmin):
     inlines = (ProductAttributeValuesInline, ProductMediaInline)
+    # inlines = (ProductMediaInline,)

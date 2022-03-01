@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'apps.catalogue.apps.CatalogueConfig',
     # Third-party apps
     'mptt',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -133,6 +134,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
@@ -149,3 +151,13 @@ AUTHENTICATION_BACKENDS = [
 # Config Session
 
 SESSION_COOKIE_AGE = 43800 * 60  # 1 month
+
+# Arvan Cloud Storage
+DEFAULT_FILE_STORAGE = config('DEFAULT_FILE_STORAGE')
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+AWS_SERVICE_NAME = config('AWS_SERVICE_NAME')
+AWS_S3_ENDPOINT_URL = config('AWS_S3_ENDPOINT_URL')
+AWS_S3_FILE_OVERWRITE = False
+AWS_LOCAL_STORAGE = f'{BASE_DIR}/aws/'

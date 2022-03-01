@@ -40,7 +40,7 @@ class Register(View):
 
             random_code = random.randint(100000, 999999)
             random_code = str(random_code)
-            # send_otp_code(phone, random_code)
+            send_otp_code(phone, random_code)
             print(random_code)
             otp_code = OtpCode.objects.create(phone_number=phone, code=random_code)
             otp_code.expire_time += timezone.timedelta(minutes=3)
