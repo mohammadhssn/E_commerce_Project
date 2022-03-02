@@ -7,7 +7,7 @@ from mptt.models import MPTTModel, TreeForeignKey, TreeManyToManyField
 
 class Category(MPTTModel):
     """
-        Inventory Category table implimented with MPTT
+        Inventory Category table implemented with MPTT
     """
 
     name = models.CharField(
@@ -108,6 +108,11 @@ class Product(models.Model):
         auto_now_add=True,
         editable=False,
         verbose_name=_('date product created'),
+        help_text=_('format Y-m-d H:M:S')
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name=_('date product last updated'),
         help_text=_('format Y-m-d H:M:S')
     )
 
@@ -402,6 +407,14 @@ class Stock(models.Model):
         blank=False,
         verbose_name=_('units sold to data'),
         help_text=_('format: required, default=0')
+    )
+    units_sold = models.IntegerField(
+        default=0,
+        unique=False,
+        null=False,
+        blank=False,
+        verbose_name=_("units sold to date"),
+        help_text=_("format: required, default-0"),
     )
 
 

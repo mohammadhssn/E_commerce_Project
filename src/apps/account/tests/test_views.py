@@ -8,7 +8,7 @@ from ...utils import get_instance_otpcode_from_session
 
 class TestViews:
 
-    def test_register_view_GET(self, client):
+    def test_register_view_GET(self, db, client):
         """
             Test register account with method GET in view
         """
@@ -72,7 +72,7 @@ class TestViews:
         """
         pass
 
-    def test_login_view_GET(self, client):
+    def test_login_view_GET(self, db, client):
         """
             Test get form login with method GET
         """
@@ -102,7 +102,7 @@ class TestViews:
 
         assert response.status_code == 200
 
-    def test_forget_password_view_GET(self, client):
+    def test_forget_password_view_GET(self, db, client):
         """
             Test forget password with method GET
         """

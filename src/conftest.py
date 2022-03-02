@@ -3,11 +3,33 @@ from pytest_factoryboy import register
 
 from tests.factories import (
     UserFactory,
-    OtpCodeFactory
+    OtpCodeFactory,
+    CategoryFactory,
+    ProductFactory,
+    ProductTypeFactory,
+    BrandFactory,
+    ProductInventoryFactory,
+    MediaFactory,
+    StockFactory,
+    ProductAttributeFactory,
+    ProductAttributeValueFactory,
+    ProductAttributeValuesFactory,
+    ProductWithAttributeValuesFactory
 )
 
 register(UserFactory)
 register(OtpCodeFactory)
+register(CategoryFactory)
+register(ProductTypeFactory)
+register(ProductFactory)
+register(BrandFactory)
+register(ProductInventoryFactory)
+register(MediaFactory)
+register(StockFactory)
+register(ProductAttributeFactory)
+register(ProductAttributeValueFactory)
+register(ProductAttributeValuesFactory)
+register(ProductWithAttributeValuesFactory)
 
 
 # User Fixture
@@ -24,6 +46,9 @@ def admin_user(db, user_factory):
 
 
 # #############################################################################################################
+
+# app account
+
 # OtpCode Fixture
 @pytest.fixture
 def otp_code(db, otp_code_factory):
@@ -53,3 +78,7 @@ def set_session_reset_password(db, client):
     }
     session.save()
     return session
+
+# #############################################################################################################
+
+# app catalogue
