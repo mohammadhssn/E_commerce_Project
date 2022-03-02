@@ -1,9 +1,10 @@
 from django.contrib.postgres.aggregates import ArrayAgg
+from django.core.paginator import Paginator
 from django.db.models import Count
 from django.shortcuts import render, get_object_or_404
 from django.views import View
 
-from .models import ProductInventory, ProductTypeAttribute, Media
+from .models import ProductInventory, ProductTypeAttribute, Media, Category
 
 
 class Home(View):
@@ -53,3 +54,21 @@ class ProductDetailView(View):
         return render(request, self.template_name,
                       {'product': product, 'product_attribute_values': product_attribute_values,
                        'product_type_attributes': product_type_attributes, 'product_image': product_image})
+
+
+class CategoryList(View):
+    """
+        List of Category
+    """
+
+    def get(self, request, slug=None):
+        category = get_object_or_404(Category, slug=slug, is_active=True)
+        products = ProductInventory.objects.is_default().filter(
+            product__category__in=category.get_descendants(
+                include_self=True)).distinct()
+
+        paginator = Paginator(products, 10)  # Show 10 contacts per page.
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        return render(request, 'catalogue/category.html', {'category': category, 'page_obj': page_obj})
