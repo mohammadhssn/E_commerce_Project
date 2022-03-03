@@ -5,7 +5,8 @@ from django.utils import timezone
 from django.views import View
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth import get_user_model, login, authenticate
+from django.contrib.auth import get_user_model, login, authenticate, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import OtpCode
 from .forms import (
@@ -221,3 +222,14 @@ class ResetPasswordDoneView(CheckAccessTpPageWithSessionMixins, View):
             messages.success(request, 'reset password successfully!', 'success')
             return redirect('account:login')
         return render(request, self.template_name, {'form': form})
+
+
+class LogoutView(LoginRequiredMixin, View):
+    """
+        logout current user from site
+    """
+
+    def get(self, request):
+        logout(request)
+        messages.success(request, 'your logged out successfully!', 'success')
+        return redirect('account:login')

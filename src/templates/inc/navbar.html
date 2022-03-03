@@ -83,7 +83,7 @@
                                                     </a>
                                                     <a href=""
                                                        class="text-reset small list-group-item p-0 pb-1 border-0 dropdown-account-link">{% trans 'Orders' %}</a>
-                                                    <a href=""
+                                                    <a href="{% url 'account:logout' %}"
                                                        class="text-reset small list-group-item p-0 pb-1 border-0 dropdown-account-link">{% trans 'Logout' %}</a>
                                                 {% else %}
                                                     <a href="{% url 'account:register' %}"
@@ -99,17 +99,17 @@
                         </ul>
                     </div>
                 </div>
-                <a type="button" role="button" href=""
+                <a type="button" role="button" href="{% url 'basket:basket_summary' %}"
                    class="btn btn-outline-secondary border-0 basket-btn">
-                    {#                    {% with total_qty=basket|length %}#}
-                    {#                        <div id="basket-qty" class="basket-qty">#}
-                    {#                            {% if total_qty > 0 %}#}
-                    {#                                {{ total_qty }}#}
-                    {#                            {% else %}#}
-                    {#                                0#}
-                    {#                            {% endif %}#}
-                    {#                        </div>#}
-                    {#                    {% endwith %}#}
+                    {% with total_qty=basket|length %}
+                        <div id="basket-qty" class="basket-qty">
+                            {% if total_qty > 0 %}
+                                {{ total_qty }}
+                            {% else %}
+                                0
+                            {% endif %}
+                        </div>
+                    {% endwith %}
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
                              class="bi bi-cart3"

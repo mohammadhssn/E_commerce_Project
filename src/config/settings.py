@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     # Local apps
     'apps.account.apps.AccountConfig',
     'apps.catalogue.apps.CatalogueConfig',
+    'apps.basket.apps.BasketConfig',
     # Third-party apps
     'mptt',
     'storages',
@@ -69,7 +70,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 # categories
-                'apps.catalogue.context_manager.categories',
+                'apps.catalogue.context_processors.categories',
+                'apps.basket.context_processors.basket',
             ],
         },
     },

@@ -92,29 +92,32 @@
 
 
 
-    {#    <script>#}
-    {#        $(document).on('click', '#add-button', function (e) {#}
-    {#            e.preventDefault();#}
-    {#            $.ajax({#}
-    {#                type: 'POST',#}
-    {#                url: '{% url "basket:basket_add" %}',#}
-    {#                data: {#}
-    {#                    productid: $('#add-button').val(),#}
-    {#                    productqty: $('#select option:selected').text(),#}
-    {#                    csrfmiddlewaretoken: "{{csrf_token}}",#}
-    {#                    action: 'post'#}
-    {#                },#}
-    {#                success: function (json) {#}
-    {#                    document.getElementById("basket-qty").innerHTML = json.qty#}
-    {#                },#}
-    {#                error: function (xhr, errmsg, err) {#}
-    {#                }#}
-    {#            });#}
-    {#        })#}
-    {#    </script>#}
     <script>
+        $(document).on('click', '#add-button', function (e) {
+            e.preventDefault();
+            {#url_product = window.location.href.split('?')[1]#}
+            {#console.log(url_product)#}
+            $.ajax({
+                type: 'POST',
+                url: '{% url "basket:basket_add" %}',
+                data: {
+                    productid: $('#add-button').val(),
+                    productqty: $('#select option:selected').text(),
+                    csrfmiddlewaretoken: "{{csrf_token}}",
+                    action: 'post'
+                },
+                success: function (json) {
+                    document.getElementById("basket-qty").innerHTML = json.qty
+                },
+                error: function (xhr, errmsg, err) {
+                }
+            });
+        })
+        {#    </script>#}
+        {#        <script>#}
         var d = {}
         let textBoxes = document.querySelectorAll('[id^=target]')
+        console.log(textBoxes)
 
         let e = 0
         let f = textBoxes.length

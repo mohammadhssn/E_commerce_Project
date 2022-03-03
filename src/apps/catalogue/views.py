@@ -33,6 +33,7 @@ class ProductDetailView(View):
                 num_tags=Count('attribute_values')).filter(num_tags=len(filter_arguments)).values(
                 "id", "sku", "product__name", "store_price", "product_inventory__units").annotate(
                 field_a=ArrayAgg("attribute_values__attribute_value")).get()
+
         else:
             product = ProductInventory.objects.filter(
                 product__web_id=web_id).filter(is_default=True).values(
