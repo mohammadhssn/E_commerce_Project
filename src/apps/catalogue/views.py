@@ -7,12 +7,10 @@ from django.views import View
 from .models import ProductInventory, ProductTypeAttribute, Media, Category
 
 
-class Home(View):
+class HomeView(View):
 
     def get(self, request):
         products = ProductInventory.objects.prefetch_related('media_product_inventory').filter(is_active=True)
-        print('*' * 90)
-        print(products)
         return render(request, 'catalogue/home.html', {'products': products})
 
 
@@ -56,7 +54,7 @@ class ProductDetailView(View):
                        'product_type_attributes': product_type_attributes, 'product_image': product_image})
 
 
-class CategoryList(View):
+class CategoryListView(View):
     """
         List of Category
     """
