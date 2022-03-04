@@ -60,7 +60,7 @@ class Basket:
 
     def get_total_price(self):
         sub_total = sum(Decimal(item['price']) * item['qty'] for item in self.basket.values())
-        new_price = 11.50
+        new_price = 0.00
 
         total = sub_total + Decimal(new_price)
         return total

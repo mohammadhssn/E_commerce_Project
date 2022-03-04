@@ -101,8 +101,8 @@
                 type: 'POST',
                 url: '{% url "basket:basket_add" %}',
                 data: {
-                    productid: $('#add-button').val(),
-                    productqty: $('#select option:selected').text(),
+                    product_id: $('#add-button').val(),
+                    product_qty: $('#select option:selected').text(),
                     csrfmiddlewaretoken: "{{csrf_token}}",
                     action: 'post'
                 },

@@ -1,14 +1,12 @@
 import pytest
 
 from django.urls import reverse
-from django.contrib.auth import get_user_model
 from ..models import OtpCode
-from ...utils import get_instance_otpcode_from_session
 
 
 class TestViews:
 
-    def test_register_view_GET(self, db, client):
+    def test_register_view_method_get(self, db, client):
         """
             Test register account with method GET in view
         """
@@ -28,7 +26,7 @@ class TestViews:
             ("09330238080", "testpass2", "wrongpass", 0, 200),
         ],
     )
-    def test_register_view_POST(self, db, client, phone, password, password2, validity, status):
+    def test_register_view_method_post(self, db, client, phone, password, password2, validity, status):
         """
             Test register account with method POST in view
         """
@@ -45,7 +43,7 @@ class TestViews:
         assert response.status_code == status
         assert all_otp_code == validity
 
-    def test_verify_code_register_view__valid_GET(self, set_session_user_info, client):
+    def test_verify_code_register_view_valid_method_get(self, set_session_user_info, client):
         """
             Test view verify code with method GET with valid data
         """
@@ -56,7 +54,7 @@ class TestViews:
         # assert response.status_code == 302
         assert response.status_code == 200
 
-    def test_verify_code_register_view__invalid_GET(self, client):
+    def test_verify_code_register_view__invalid_method_get(self, client):
         """
             Test view verify code with method GET with invalid data
         """
@@ -66,13 +64,13 @@ class TestViews:
 
         assert response.status_code == 302
 
-    def test_verify_code_register_view__valid_POST(self):
+    def test_verify_code_register_view__valid_method_post(self):
         """
             Test view verify code with method GET with valid data
         """
         pass
 
-    def test_login_view_GET(self, db, client):
+    def test_login_view_method_get(self, db, client):
         """
             Test get form login with method GET
         """
@@ -82,7 +80,7 @@ class TestViews:
 
         assert response.status_code == 200
 
-    def test_login_view_valid_POST(self, client, user):
+    def test_login_view_valid_method_post(self, client, user):
         """
             Test login user with method POST with valid data
         """
@@ -92,7 +90,7 @@ class TestViews:
 
         assert response.status_code == 302
 
-    def test_login_view_invalid_POST(self, client, user):
+    def test_login_view_invalid_method_post(self, client, user):
         """
             Test login user with method POST with invalid data
         """
@@ -102,7 +100,7 @@ class TestViews:
 
         assert response.status_code == 200
 
-    def test_forget_password_view_GET(self, db, client):
+    def test_forget_password_view__method_get(self, db, client):
         """
             Test forget password with method GET
         """
@@ -112,7 +110,7 @@ class TestViews:
 
         assert response.status_code == 200
 
-    def test_forget_password_view_valid_POST(self, user, client):
+    def test_forget_password_view_valid_method_post(self, user, client):
         """
             Test reset password with method POST valid data
         """
@@ -123,7 +121,7 @@ class TestViews:
 
         assert response.status_code == 302
 
-    def test_forget_password_view_invalid_POST(self, db, client):
+    def test_forget_password_view_invalid_method_post(self, db, client):
         """
             Test reset password with method POST invalid data
         """
@@ -134,7 +132,7 @@ class TestViews:
 
         assert response.status_code == 200
 
-    def test_reset_password_view_GET(self, set_session_reset_password, client):
+    def test_reset_password_view_method_get(self, set_session_reset_password, client):
         """
             Test reset password view with method GET
         """
@@ -144,7 +142,7 @@ class TestViews:
 
         assert response.status_code == 200
 
-    def test_reset_password_view_limit_access_GET(self, client):
+    def test_reset_password_view_limit_access_method_get(self, client):
         """
             Test reset password done view with limit access to page
         """
@@ -154,13 +152,13 @@ class TestViews:
 
         assert response.status_code == 302
 
-    def test_reset_password_view_POST(self, set_session_reset_password, client):
+    def test_reset_password_view_method_post(self, set_session_reset_password, client):
         """
             Test reset password done view with method POST
         """
         pass
 
-    def test_reset_password_done_view_limit_access_GET(self, client):
+    def test_reset_password_done_view_limit_access_method_get(self, client):
         """
             Test limit access to page reset password done view
         """
@@ -170,7 +168,7 @@ class TestViews:
 
         assert response.status_code == 302
 
-    def test_reset_password_done_view_GET(self, set_session_reset_password, client):
+    def test_reset_password_done_view_method_get(self, set_session_reset_password, client):
         """
             Test limit access to page reset password done view
         """
@@ -180,7 +178,7 @@ class TestViews:
 
         assert response.status_code == 200
 
-    def test_reset_password_done_view_valid_POST(self, set_session_reset_password, client):
+    def test_reset_password_done_view_valid_method_post(self, set_session_reset_password, client):
         """
             Test limit access to page reset password done view
         """

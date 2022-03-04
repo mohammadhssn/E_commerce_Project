@@ -9,7 +9,7 @@ from apps.catalogue.models import ProductInventory
 
 class BasketSummaryView(View):
     """
-        Show basket summary
+        show all items in session basket in view
     """
 
     def get(self, request):
@@ -20,48 +20,59 @@ class BasketSummaryView(View):
 
 class BasketAddView(View):
     """
-        Add product in basket
+        Add product in basket session
+        input: product_id & product_qty from request POST
+        and get product and send to basket method basket.add()
+        output: sum quantity products
     """
 
     def post(self, request):
         basket = Basket(request)
-        product_id = int(request.POST.get('productid'))
-        product_qty = int(request.POST.get('productqty'))
+        product_id = int(request.POST.get('product_id'))
+        product_qty = int(request.POST.get('product_qty'))
         product = get_object_or_404(ProductInventory, id=product_id)
         basket.add(product=product, qty=product_qty)
-        basketqty = basket.__len__()
-        response = JsonResponse({'qty': basketqty})
+        basket_qty = basket.__len__()
+        response = JsonResponse({'qty': basket_qty}, status=200)
         return response
 
 
 class BasketDeleteView(View):
     """
         Delete item form basket
+        input: product_id from request POST
+        and delete item form basket with method basket.delete()
+        output: sum quantity products and total price items
+
     """
 
     def post(self, request):
         basket = Basket(request)
-        product_id = int(request.POST.get('productid'))
+        product_id = int(request.POST.get('product_id'))
         basket.delete(product=product_id)
 
-        basketqty = basket.__len__()
-        baskettotal = basket.get_total_price()
-        response = JsonResponse({'qty': basketqty, 'subtotal': baskettotal})
+        basket_qty = basket.__len__()
+        basket_total = basket.get_total_price()
+        response = JsonResponse({'qty': basket_qty, 'subtotal': basket_total})
         return response
 
 
 class BasketUpdateView(View):
     """
-        Delete item form basket
+        update item form basket
+        input: product_id & product_qty from request POST
+        and update item form basket with method basket.update()
+        output: sum quantity items and total price items
+
     """
 
     def post(self, request):
         basket = Basket(request)
-        product_id = int(request.POST.get('productid'))
-        product_qty = int(request.POST.get('productqty'))
+        product_id = int(request.POST.get('product_id'))
+        product_qty = int(request.POST.get('product_qty'))
         basket.update(product=product_id, qty=product_qty)
 
-        basketqty = basket.__len__()
-        baskettotal = basket.get_total_price()
-        response = JsonResponse({'qty': basketqty, 'subtotal': baskettotal})
+        basket_qty = basket.__len__()
+        basket_total = basket.get_total_price()
+        response = JsonResponse({'qty': basket_qty, 'subtotal': basket_total})
         return response
