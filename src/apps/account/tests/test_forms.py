@@ -10,6 +10,8 @@ from ..forms import (
     ForgettingPasswordForm,
     VerifyCodePasswordForm,
     RestPasswordDoneForm,
+
+    UserEditProfileForm,
 )
 
 
@@ -197,5 +199,33 @@ class TestUserForm:
         }
 
         form = RestPasswordDoneForm(data=data)
+
+        assert form.is_valid() is validity
+
+
+class TestUserDashboardForm:
+
+    @pytest.mark.parametrize(
+        "phone_number,full_name, email, validity",
+        [
+            ("09192311248", "ali", "ali@email.com", True),
+            ("", "sara", "sara", False),
+            ("09192311248", "sara", "sara@email.com", True),
+            ("", "", "", False),
+            ("", "", "reze@email.com", False),
+        ],
+    )
+    def test_account_user_edit_profile(self, db, phone_number, full_name, email, validity):
+        """
+            Test Edit profile Form
+        """
+
+        data = {
+            'phone_number': phone_number,
+            'full_name': full_name,
+            'email': email
+        }
+
+        form = UserEditProfileForm(data=data)
 
         assert form.is_valid() is validity

@@ -78,7 +78,7 @@
                                             <h6 class="card-title">{% trans 'My Account' %}</h6>
                                             <ul class="list-group list-group-flush dropdown-account-link">
                                                 {% if user.is_authenticated %}
-                                                    <a href=""
+                                                    <a href="{% url 'account:dashboard' %}"
                                                        class="text-reset small list-group-item p-0 pb-1 border-0 dropdown-account-link">{% trans 'Your Account' %}
                                                     </a>
                                                     <a href=""

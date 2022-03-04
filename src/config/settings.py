@@ -146,6 +146,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Config User
 AUTH_USER_MODEL = 'account.User'
+LOGIN_REDIRECT_URL = '/account/dashboard/'
+LOGIN_URL = '/account/login/'
 
 AUTHENTICATION_BACKENDS = [
     # 'django.contrib.auth.backends.ModelBackend',

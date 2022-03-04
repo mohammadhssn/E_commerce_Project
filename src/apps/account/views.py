@@ -15,15 +15,19 @@ from .forms import (
     UserLoginForm,
     ForgettingPasswordForm,
     VerifyCodePasswordForm,
-    RestPasswordDoneForm
+    RestPasswordDoneForm,
+    UserEditProfileForm,
 )
 from .mixins import CheckAccessTpPageWithSessionMixins
 from apps.utils import send_otp_code, get_instance_otpcode_from_session, delete_session_key
 
 
-class Register(View):
+class RegisterView(View):
     """
         Register a new User
+        input: phone_number and password
+        save to session detail input
+        output: send code for phone_number
     """
     form_class = UserRegistrationForm
     template_name = 'account/registration/register.html'
@@ -60,9 +64,17 @@ class Register(View):
 class UserRegisterVerifyCodeView(CheckAccessTpPageWithSessionMixins, View):
     """
         Validation new user with code
+        input: code
+        get detail user form session and check code with code in session
+        output: register user
     """
     form_class = VerifyCodeForm
     template_name = 'account/registration/verify.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('catalogue:home')
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request):
         form = self.form_class
@@ -102,15 +114,27 @@ class UserRegisterVerifyCodeView(CheckAccessTpPageWithSessionMixins, View):
 class UserLoginView(View):
     """
         Login a user
+        input: phone_number and password
+        output: Login a user and redirect to path
     """
     form_class = UserLoginForm
     template_name = 'account/registration/login.html'
+
+    def setup(self, request, *args, **kwargs):
+        self.next = request.GET.get('next', None)
+        return super().setup(request, *args, **kwargs)
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('catalogue:home')
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request):
         form = self.form_class
         return render(request, self.template_name, {'form': form})
 
     def post(self, request):
+
         form = self.form_class(request.POST)
         if form.is_valid():
             phone = form.cleaned_data.get('phone')
@@ -119,6 +143,8 @@ class UserLoginView(View):
             if user is not None:
                 login(request, user)
                 messages.success(request, _('you logged in successfully'), 'success')
+                if self.next:
+                    return redirect(self.next)
                 return redirect('catalogue:home')
             else:
                 messages.error(request, _('wrong phone or password'), 'warning')
@@ -130,6 +156,9 @@ class UserLoginView(View):
 class ForgettingPasswordView(View):
     """
         Forget user password and send code
+        input: phone number
+        check if phone number is exist and send code for reset password & create session for save phone_number
+        output: send code
     """
     form_class = ForgettingPasswordForm
     template_name = 'account/password/forget_password.html'
@@ -168,6 +197,9 @@ class ForgettingPasswordView(View):
 class ResetPasswordView(CheckAccessTpPageWithSessionMixins, View):
     """
         Validation user with code for reset password
+        input: code
+        check is code is correct and session exists
+        output: redirect for change password view
     """
     form_class = VerifyCodePasswordForm
     template_name = 'account/password/reset_password.html'
@@ -202,6 +234,9 @@ class ResetPasswordView(CheckAccessTpPageWithSessionMixins, View):
 class ResetPasswordDoneView(CheckAccessTpPageWithSessionMixins, View):
     """
         reset password completely
+        input: password and confirm password
+        check is session exists and get form database current user
+        output: change current password
     """
     form_class = RestPasswordDoneForm
     template_name = 'account/password/reset_password_done.html'
@@ -227,9 +262,47 @@ class ResetPasswordDoneView(CheckAccessTpPageWithSessionMixins, View):
 class LogoutView(LoginRequiredMixin, View):
     """
         logout current user from site
+        and current user must be available
+        output: logout user and redirect to home page
     """
 
     def get(self, request):
         logout(request)
         messages.success(request, 'your logged out successfully!', 'success')
         return redirect('account:login')
+
+
+class DashboardView(LoginRequiredMixin, View):
+    """
+        Dashboard user
+        current user must be available
+        output: return to dashboard current user
+    """
+
+    template_name = 'account/dashboard/dashboard.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+
+class EditProfileView(LoginRequiredMixin, View):
+    """
+        Change profile user
+        input: email, full_name, (phone_number can't change)
+        show form for change current user info and current user must be available
+    """
+
+    form_class = UserEditProfileForm
+    template_name = 'account/dashboard/edit_profile.html'
+
+    def get(self, request):
+        user_form = self.form_class(instance=request.user)
+        return render(request, self.template_name, {'user_form': user_form})
+
+    def post(self, request):
+        user_form = self.form_class(data=request.POST, instance=request.user)
+        if user_form.is_valid():
+            user_form.save()
+            messages.success(request, 'updating your profile successfully', 'success')
+            return redirect('account:dashboard')
+        return render(request, self.template_name, {'user_form': self.form_class(instance=request.user)})

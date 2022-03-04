@@ -153,3 +153,30 @@ class RestPasswordDoneForm(forms.Form):
             {'class': 'form-control mb-3', 'placeholder': 'Password'})
         self.fields['password2'].widget.attrs.update(
             {'class': 'form-control', 'placeholder': 'Repeat Password'})
+
+
+# Profile
+class UserEditProfileForm(forms.ModelForm):
+    phone_number = forms.CharField(
+        label=_('Phone Number (can not be changed)'),
+        max_length=12,
+        widget=forms.TextInput(
+            attrs={'class': 'form-control mb-3', 'placeholder': 'phone', 'id': 'form-phone', 'readonly': 'readonly'}
+        ))
+    full_name = forms.CharField(
+        label=_('Username'), min_length=3, max_length=50, widget=forms.TextInput(
+            attrs={'class': 'form-control mb-3', 'placeholder': 'Username', 'id': 'form-firstname'}))
+
+    email = forms.EmailField(
+        label=_('Account email'), max_length=200, widget=forms.TextInput(
+            attrs={'class': 'form-control mb-3', 'placeholder': 'email', 'id': 'form-email'}
+        ))
+
+    class Meta:
+        model = get_user_model()
+        fields = ('phone_number', 'full_name', 'email')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['full_name'].required = True
+        self.fields['email'].required = True
