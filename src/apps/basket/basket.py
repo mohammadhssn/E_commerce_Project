@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from apps.catalogue.models import ProductInventory
+from apps.checkout.models import DeliveryOption
 
 BASKET_SESSION_KEY = 'basket'
 
@@ -62,7 +63,23 @@ class Basket:
         sub_total = sum(Decimal(item['price']) * item['qty'] for item in self.basket.values())
         new_price = 0.00
 
+        if 'purchase' in self.session:
+            new_price = DeliveryOption.objects.get(id=self.session['purchase']['delivery_id']).delivery_price
+
         total = sub_total + Decimal(new_price)
+        return total
+
+    def get_delivery_price(self):
+        new_price = 0.00
+
+        if 'purchase' in self.session:
+            new_price = DeliveryOption.objects.get(id=self.session['purchase']['delivery_id']).delivery_price
+
+        return new_price
+
+    def basket_update_delivery(self, delivery_price=0):
+        subtotal = sum(Decimal(item['price']) * item['qty'] for item in self.basket.values())
+        total = subtotal + Decimal(delivery_price)
         return total
 
     def delete(self, product):

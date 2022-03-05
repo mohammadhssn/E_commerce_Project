@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import DeliveryOption, PaymentSelections
+
+admin.site.register(DeliveryOption)
+admin.site.register(PaymentSelections)
