@@ -69,6 +69,7 @@ class TestViews:
         assert response.status_code == 302
         assertRedirects(response, reverse('catalogue:home'))
 
+    @pytest.mark.skip
     def test_account_verify_code_register_view__valid_method_post(self):
         """
             Test view verify code with method GET with valid data
@@ -166,6 +167,7 @@ class TestViews:
         assert response.status_code == 302
         assertRedirects(response, reverse('catalogue:home'))
 
+    @pytest.mark.skip
     def test_account_reset_password_view_method_post(self, set_session_reset_password, client):
         """
             Test reset password done view with method POST
@@ -194,6 +196,7 @@ class TestViews:
         assert response.status_code == 200
         assertTemplateUsed(response, 'account/password/reset_password_done.html')
 
+    @pytest.mark.skip
     def test_account_reset_password_done_view_valid_method_post(self, set_session_reset_password, client):
         """
             Test limit access to page reset password done view

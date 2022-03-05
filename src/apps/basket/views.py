@@ -33,7 +33,7 @@ class BasketAddView(View):
         product = get_object_or_404(ProductInventory, id=product_id)
         basket.add(product=product, qty=product_qty)
         basket_qty = basket.__len__()
-        response = JsonResponse({'qty': basket_qty}, status=200)
+        response = JsonResponse({'qty': basket_qty})
         return response
 
 

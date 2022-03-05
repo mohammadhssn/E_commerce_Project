@@ -16,7 +16,7 @@ class TestUrls:
 
         assert resolve(url).func.view_class == HomeView
 
-    def test_prodcut_detail_url(self):
+    def test_product_detail_url(self):
         """
             test home url
         """
