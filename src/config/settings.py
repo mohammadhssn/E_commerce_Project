@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'apps.account.apps.AccountConfig',
     'apps.catalogue.apps.CatalogueConfig',
     'apps.basket.apps.BasketConfig',
+    'apps.checkout.apps.CheckoutConfig',
     # Third-party apps
     'mptt',
     'storages',
