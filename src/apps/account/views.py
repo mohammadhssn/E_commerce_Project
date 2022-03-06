@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model, login, authenticate, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import OtpCode
+from .models import OtpCode, Address
 from .forms import (
     UserRegistrationForm,
     VerifyCodeForm,
@@ -17,6 +17,7 @@ from .forms import (
     VerifyCodePasswordForm,
     RestPasswordDoneForm,
     UserEditProfileForm,
+    UserAddAddressForm,
 )
 from .mixins import CheckAccessTpPageWithSessionMixins
 from apps.utils import send_otp_code, get_instance_otpcode_from_session, delete_session_key
@@ -306,3 +307,93 @@ class EditProfileView(LoginRequiredMixin, View):
             messages.success(request, 'updating your profile successfully', 'success')
             return redirect('account:dashboard')
         return render(request, self.template_name, {'user_form': self.form_class(instance=request.user)})
+
+
+# Address
+class AddressView(LoginRequiredMixin, View):
+    """
+        show all address current user
+    """
+
+    template_name = 'account/dashboard/addresses.html'
+
+    def get(self, request):
+        addresses = Address.objects.filter(customer=request.user)
+        return render(request, self.template_name, {'addresses': addresses})
+
+
+class AddAddressView(LoginRequiredMixin, View):
+    """
+        Add address for current user
+        input: form
+        output: if valid form create new address
+    """
+    form_class = UserAddAddressForm
+    template_name = 'account/dashboard/add_edit_addresses.html'
+
+    def get(self, request):
+        return render(request, self.template_name, {'form': self.form_class})
+
+    def post(self, request):
+        form = self.form_class(data=request.POST)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.customer = request.user
+            form.save()
+            messages.success(request, 'add address successfully', 'success')
+            return redirect('account:addresses')
+        return render(request, self.template_name, {'form': form})
+
+
+class EditAddressView(LoginRequiredMixin, View):
+    """
+        edit address
+        input: form and id address current user
+        output: if valid form edit address
+    """
+    form_class = UserAddAddressForm
+    template_name = 'account/dashboard/add_edit_addresses.html'
+
+    def setup(self, request, *args, **kwargs):
+        self.address = get_object_or_404(Address, pk=kwargs.get('id'), customer=request.user)
+        return super().setup(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(instance=self.address)
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(instance=self.address, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'edit address successfully', 'success')
+            return redirect('account:addresses')
+        return render(request, self.template_name, {'form': form})
+
+
+class DeleteAddressView(LoginRequiredMixin, View):
+    """
+        delete address
+        input: id address current user
+        output: delete address current user with id
+    """
+
+    def get(self, request, id):
+        address = get_object_or_404(Address, pk=id, customer=request.user)
+        address.delete()
+        messages.success(request, 'delete address successfully', 'success')
+        return redirect('account:addresses')
+
+
+class SetDefaultAddressView(LoginRequiredMixin, View):
+    """
+        delete address
+        input: id address current user
+        output: delete address current user with id
+    """
+
+    def get(self, request, id):
+        Address.objects.filter(customer=request.user, default=True).update(default=False)
+        Address.objects.filter(pk=id, customer=request.user).update(default=True)
+        messages.success(request, 'set default address successfully', 'success')
+        return redirect('account:addresses')

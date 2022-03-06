@@ -6,7 +6,7 @@ from django.contrib.auth.password_validation import validate_password
 
 from django.contrib.auth import get_user_model
 
-from .models import phone_regex
+from .models import phone_regex, Address
 
 
 class UserCreationForm(forms.ModelForm):
@@ -180,3 +180,31 @@ class UserEditProfileForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['full_name'].required = True
         self.fields['email'].required = True
+
+
+# Address
+class UserAddAddressForm(forms.ModelForm):
+    class Meta:
+        model = Address
+        fields = ('full_name', 'phone', 'address_line', 'address_line2', 'town_city', 'postcode')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["full_name"].widget.attrs.update(
+            {"class": "form-control mb-2 account-form", "placeholder": "Full Name"}
+        )
+        self.fields["phone"].widget.attrs.update(
+            {"class": "form-control mb-2 account-form", "placeholder": "Phone"}
+        )
+        self.fields["address_line"].widget.attrs.update(
+            {"class": "form-control mb-2 account-form", "placeholder": "address_line"}
+        )
+        self.fields["address_line2"].widget.attrs.update(
+            {"class": "form-control mb-2 account-form", "placeholder": "address_line2"}
+        )
+        self.fields["town_city"].widget.attrs.update(
+            {"class": "form-control mb-2 account-form", "placeholder": "town_city"}
+        )
+        self.fields["postcode"].widget.attrs.update(
+            {"class": "form-control mb-2 account-form", "placeholder": "postcode"}
+        )

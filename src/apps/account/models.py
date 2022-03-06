@@ -1,8 +1,11 @@
+import uuid
+
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import RegexValidator
+from django.conf import settings
 
 from .managers import UserManager
 
@@ -60,3 +63,66 @@ class OtpCode(models.Model):
 
     def __str__(self):
         return self.phone_number
+
+
+class Address(models.Model):
+    """
+        Address Customer
+    """
+
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
+    customer = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name=_('Customer')
+    )
+    full_name = models.CharField(
+        max_length=150,
+        verbose_name=_('full name')
+    )
+    phone = models.CharField(
+        max_length=12, validators=[phone_regex], verbose_name=_("phone"),
+    )
+    postcode = models.CharField(
+        _('Postcode'),
+        max_length=50
+    )
+    address_line = models.CharField(
+        _('Address Line 1'),
+        max_length=255
+    )
+    address_line2 = models.CharField(
+        _('Address Line 2'),
+        max_length=255
+    )
+    town_city = models.CharField(
+        _('Town/City/State'),
+        max_length=150
+    )
+    delivery_instructions = models.CharField(
+        _('Delivery Instructions'),
+        max_length=255
+    )
+    created_at = models.DateTimeField(
+        _('Created at'),
+        auto_now_add=True
+    )
+    updated_at = models.DateTimeField(
+        _('Updated at'),
+        auto_now=True
+    )
+    default = models.BooleanField(
+        _('Default'),
+        default=False
+    )
+
+    class Meta:
+        verbose_name = 'Address'
+        verbose_name_plural = 'Addresses'
+
+    def __str__(self):
+        return f"{self.full_name} Address"

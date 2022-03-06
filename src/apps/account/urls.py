@@ -16,4 +16,10 @@ urlpatterns = [
     # dashboard
     path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
     path('edit-profile/', views.EditProfileView.as_view(), name='edit_profile'),
+    # Address
+    path('addresses/', views.AddressView.as_view(), name='addresses'),
+    path('addresses/add/', views.AddAddressView.as_view(), name='add_addresses'),
+    path('addresses/edit/<uuid:id>/', views.EditAddressView.as_view(), name='edit_addresses'),
+    path('addresses/delete/<uuid:id>/', views.DeleteAddressView.as_view(), name='delete_addresses'),
+    path('addresses/set-default/<uuid:id>/', views.SetDefaultAddressView.as_view(), name='set_default_addresses'),
 ]
