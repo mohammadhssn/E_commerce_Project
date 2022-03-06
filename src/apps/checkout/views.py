@@ -7,7 +7,7 @@ from .models import DeliveryOption
 from ..basket.basket import Basket
 
 
-class DeliveryChoices(LoginRequiredMixin, View):
+class DeliveryChoicesView(LoginRequiredMixin, View):
     """
         show all delivery option if is_active=True
     """
@@ -18,7 +18,7 @@ class DeliveryChoices(LoginRequiredMixin, View):
         return render(request, self.template_name, {'delivery_options': delivery_options})
 
 
-class BasketUpdateDelivery(LoginRequiredMixin, View):
+class BasketUpdateDeliveryView(LoginRequiredMixin, View):
     """
         select delivery choices
         input: delivery_id from request POST

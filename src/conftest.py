@@ -14,7 +14,9 @@ from tests.factories import (
     ProductAttributeFactory,
     ProductAttributeValueFactory,
     ProductAttributeValuesFactory,
-    ProductWithAttributeValuesFactory
+    ProductWithAttributeValuesFactory,
+    DeliveryOptionFactory,
+    PaymentSelectionsFactory,
 )
 
 register(UserFactory)
@@ -30,6 +32,8 @@ register(ProductAttributeFactory)
 register(ProductAttributeValueFactory)
 register(ProductAttributeValuesFactory)
 register(ProductWithAttributeValuesFactory)
+register(DeliveryOptionFactory)
+register(PaymentSelectionsFactory)
 
 
 # User Fixture

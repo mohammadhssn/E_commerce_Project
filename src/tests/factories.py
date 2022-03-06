@@ -15,6 +15,7 @@ from apps.catalogue.models import (
     Stock,
     ProductAttribute, ProductAttributeValue, ProductAttributeValues
 )
+from apps.checkout.models import DeliveryOption, PaymentSelections
 
 fake = Faker()
 
@@ -179,3 +180,25 @@ class ProductWithAttributeValuesFactory(ProductInventoryFactory):
         ProductAttributeValuesFactory,
         factory_related_name="productinventory",
     )
+
+
+# app checkout
+
+class DeliveryOptionFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = DeliveryOption
+
+    delivery_name = fake.text()
+    delivery_price = '10.00'
+    delivery_method = 'DD'
+    delivery_timeframe = '0 days'
+    delivery_window = fake.text()
+    order = 1
+    is_active = True
+
+
+class PaymentSelectionsFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = PaymentSelections
+
+    name = fake.text()
