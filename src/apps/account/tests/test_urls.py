@@ -1,3 +1,5 @@
+import uuid
+
 import pytest
 
 from django.urls import reverse, resolve
@@ -78,3 +80,52 @@ class TestUrls:
         url = reverse('account:edit_profile')
 
         assert resolve(url).func.view_class == views.EditProfileView
+
+    # address
+    def test_account_addresses_url(self):
+        """
+            Test address url can connect to view AddressView
+        """
+
+        url = reverse('account:addresses')
+
+        assert resolve(url).func.view_class == views.AddressView
+
+    def test_account_add_addresses_url(self):
+        """
+            Test add address url can connect to view AddAddressView
+        """
+
+        url = reverse('account:add_addresses')
+
+        assert resolve(url).func.view_class == views.AddAddressView
+
+    def test_account_edit_addresses_url(self):
+        """
+            Test edit address url can connect to view EditAddressView
+        """
+
+        uuid_id = uuid.uuid4()
+        url = reverse('account:edit_addresses', args=[uuid_id])
+
+        assert resolve(url).func.view_class == views.EditAddressView
+
+    def test_account_delete_addresses_url(self):
+        """
+            Test delete address url can connect to view DeleteAddressView
+        """
+
+        uuid_id = uuid.uuid4()
+        url = reverse('account:delete_addresses', args=[uuid_id])
+
+        assert resolve(url).func.view_class == views.DeleteAddressView
+
+    def test_account_set_default_addresses_url(self):
+        """
+            Test set default address url can connect to view SetDefaultAddressView
+        """
+
+        uuid_id = uuid.uuid4()
+        url = reverse('account:set_default_addresses', args=[uuid_id])
+
+        assert resolve(url).func.view_class == views.SetDefaultAddressView

@@ -17,10 +17,13 @@ from tests.factories import (
     ProductWithAttributeValuesFactory,
     DeliveryOptionFactory,
     PaymentSelectionsFactory,
+    AddressFactory,
 )
 
 register(UserFactory)
 register(OtpCodeFactory)
+register(AddressFactory)
+
 register(CategoryFactory)
 register(ProductTypeFactory)
 register(ProductFactory)
@@ -32,6 +35,7 @@ register(ProductAttributeFactory)
 register(ProductAttributeValueFactory)
 register(ProductAttributeValuesFactory)
 register(ProductWithAttributeValuesFactory)
+
 register(DeliveryOptionFactory)
 register(PaymentSelectionsFactory)
 

@@ -12,6 +12,8 @@ from ..forms import (
     RestPasswordDoneForm,
 
     UserEditProfileForm,
+
+    UserAddAddressForm
 )
 
 
@@ -27,7 +29,7 @@ class TestUserAdminPanelForm:
             ("09330238180", "", "full_name", "@testpass2", "wrongpass", False),
         ],
     )
-    def test_user_creation_form(self, db, phone_number, email, full_name, password1, password2, validity):
+    def test_account_user_creation_form(self, db, phone_number, email, full_name, password1, password2, validity):
         """
             Test for create a new user from admin panel
         """
@@ -54,7 +56,7 @@ class TestUserAdminPanelForm:
             ("09330238180", "", "full_name", "@testpass2", "2022-02-26 18:15:24.438826", True),
         ],
     )
-    def test_user_change_form(self, db, phone_number, email, full_name, password, last_login, validity):
+    def test_account_user_change_form(self, db, phone_number, email, full_name, password, last_login, validity):
         """
             Test for change attribute user from admin panel
         """
@@ -84,7 +86,7 @@ class TestUserForm:
             ("09330238080", "@testpass2", "wrongpass", False),
         ],
     )
-    def test_user_registration_form(self, db, phone, password, password2, validity):
+    def test_account_user_registration_form(self, db, phone, password, password2, validity):
         """
             Test create a new user
         """
@@ -107,7 +109,7 @@ class TestUserForm:
             ("256", True),
         ],
     )
-    def test_verify_code_form(self, db, code, validity):
+    def test_account_verify_code_form(self, db, code, validity):
         """
             Test validate code
         """
@@ -120,7 +122,7 @@ class TestUserForm:
 
         assert form.is_valid() is validity
 
-    def test_user_login_form(self, db):
+    def test_account_user_login_form(self, db):
         """
             Test login user
         """
@@ -134,7 +136,7 @@ class TestUserForm:
 
         assert form.is_valid() is True
 
-    def test_user_forget_password_form(self, db, user_factory):
+    def test_account_user_forget_password_form(self, db, user_factory):
         """
             Test forget password form
         """
@@ -167,7 +169,7 @@ class TestUserForm:
             ("256", True),
         ],
     )
-    def test_verify_code_reset_password_form(self, db, code, validity):
+    def test_account_verify_code_reset_password_form(self, db, code, validity):
         """
             Test validate code for reset password
         """
@@ -188,7 +190,7 @@ class TestUserForm:
             ("@testpass2", "wrongpass", False),
         ],
     )
-    def test_user_reset_password_done_form(self, db, password, password2, validity):
+    def test_account_user_reset_password_done_form(self, db, password, password2, validity):
         """
             Test change password request user
         """
@@ -227,5 +229,41 @@ class TestUserDashboardForm:
         }
 
         form = UserEditProfileForm(data=data)
+
+        assert form.is_valid() is validity
+
+
+class TestAddressForm:
+
+    @pytest.mark.parametrize(
+        'full_name, phone, address_line, address_line2, town_city, postcode, validity',
+        [
+            ('mohammadhssn A', '09192331248', 'iran', 'iran', 'shahrood', '12345', True),
+            ('sara A', '09330238225', 'iran', 'iran', 'tehran', '145664', True),
+            ('', '09330238225', 'iran', 'iran', 'tehran', '145664', False),
+            ('ali majidi', '', 'iran', 'iran', 'tehran', '145664', False),
+            ('ali majidi', '09330238225', '', 'iran', 'tehran', '145664', False),
+            ('ali majidi', '09330238225', 'iran', '', 'tehran', '145664', False),
+            ('ali majidi', '09330238225', 'iran', 'iran', '', '145664', False),
+            ('ali majidi', '09330238225', 'iran', 'iran', 'tehran', '', False),
+            ('ali majidi', '093302382251234', 'iran', 'iran', 'tehran', '123', False),
+        ]
+    )
+    def test_account_create_address_form(self, db, full_name, phone, address_line, address_line2, town_city, postcode,
+                                         validity):
+        """
+            Test create new address if valid data and can't create with invalid data
+        """
+
+        data = {
+            'full_name': full_name,
+            'phone': phone,
+            'address_line': address_line,
+            'address_line2': address_line2,
+            'town_city': town_city,
+            'postcode': postcode
+        }
+
+        form = UserAddAddressForm(data=data)
 
         assert form.is_valid() is validity

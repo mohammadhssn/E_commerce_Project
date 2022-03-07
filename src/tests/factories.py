@@ -4,7 +4,7 @@ from faker import Faker
 
 from django.contrib.auth import get_user_model
 
-from apps.account.models import OtpCode
+from apps.account.models import OtpCode, Address
 from apps.catalogue.models import (
     Category,
     Product,
@@ -49,6 +49,21 @@ class OtpCodeFactory(factory.django.DjangoModelFactory):
 
     phone_number = '09192311248'
     code = '123456'
+
+
+class AddressFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Address
+
+    customer = factory.SubFactory(UserFactory)
+    full_name = 'test full name'
+    phone = '09192311248'
+    postcode = '12345'
+    address_line = 'address line 1'
+    address_line2 = 'address line 2'
+    town_city = 'iran'
+    delivery_instructions = 'delivery_instructions'
+    default = False
 
 
 # =============================================================================

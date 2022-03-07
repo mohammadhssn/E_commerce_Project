@@ -4,7 +4,7 @@ from django.urls import reverse
 
 from pytest_django.asserts import assertTemplateUsed, assertRedirects
 
-from ..models import OtpCode
+from ..models import OtpCode, Address
 
 
 class TestViews:
@@ -203,7 +203,7 @@ class TestViews:
         """
         pass
 
-    def test_account_dashboard_view_valid_user(self, db, client, user):
+    def test_account_dashboard_view_valid_user_method_get(self, db, client, user):
         """
             Test dashboard current user & user must be login to site
         """
@@ -284,3 +284,210 @@ class TestViews:
 
         assert response.status_code == 302
         assertRedirects(response, redirect_url)
+
+
+class TestViewAddress:
+
+    def test_account_home_address_view_with_invalid_user_method_get(self, db, client):
+        """
+            Test can't access to address home with invalid user
+        """
+
+        url = reverse('account:addresses')
+        response = client.get(url)
+        redirect_url = f"{reverse('account:login')}?next={url}"
+
+        assert response.status_code == 302
+        assertRedirects(response, redirect_url)
+
+    def test_account_home_address_view_with_valid_user_method_get(self, user, client):
+        """
+            Test can't access to address home with invalid user
+        """
+
+        client.force_login(user)
+        url = reverse('account:addresses')
+        response = client.get(url)
+
+        assert response.status_code == 200
+        assertTemplateUsed(response, 'account/dashboard/addresses.html')
+
+    def test_account_add_address_view_with_invalid_user_method_get(self, db, client):
+        """
+            Test can't access to add address view with invalid user
+        """
+
+        url = reverse('account:add_addresses')
+        response = client.get(url)
+        redirect_url = f"{reverse('account:login')}?next={url}"
+
+        assert response.status_code == 302
+        assertRedirects(response, redirect_url)
+
+    def test_account_add_address_view_with_valid_user_method_get(self, user, client):
+        """
+            Test access to add address view with valid user
+        """
+
+        client.force_login(user)
+        url = reverse('account:add_addresses')
+        response = client.get(url)
+
+        assert response.status_code == 200
+        assertTemplateUsed(response, 'account/dashboard/add_edit_addresses.html')
+
+    def test_account_add_address_view_with_invalid_user_method_post(self, db, client):
+        """
+            Test can't access to add address view with invalid user in method POST
+        """
+
+        url = reverse('account:add_addresses')
+        data = {
+            'full_name': 'kevin A',
+            'phone': '09192311248',
+            'address_line': 'iran',
+            'address_line2': 'iran2',
+            'town_city': 'tehran',
+            'postcode': '12345'
+        }
+        response = client.post(url, data=data)
+        all_address = Address.objects.count()
+        redirect_url = f"{reverse('account:login')}?next={url}"
+
+        assert response.status_code == 302
+        assert all_address == 0
+        assertRedirects(response, redirect_url)
+
+    def test_account_add_address_view_with_valid_user_method_post(self, user, client):
+        """
+            Test access to add address view with valid user in method POST
+        """
+
+        client.force_login(user)
+        url = reverse('account:add_addresses')
+        data = {
+            'full_name': 'kevin A',
+            'phone': '09192311248',
+            'address_line': 'iran',
+            'address_line2': 'iran2',
+            'town_city': 'tehran',
+            'postcode': '12345'
+        }
+        response = client.post(url, data=data)
+        all_address = Address.objects.count()
+
+        assert response.status_code == 302
+        assert all_address == 1
+        assertRedirects(response, reverse('account:addresses'))
+
+    def test_account_edit_address_view_with_valid_user_method_get(self, user, client, address_factory):
+        """
+            Test access to edit address view with valid user
+        """
+
+        client.force_login(user)
+
+        address = address_factory.create(customer=user)
+        url = reverse('account:edit_addresses', args=[address.id])
+        response = client.get(url)
+
+        assert response.status_code == 200
+        assertTemplateUsed(response, 'account/dashboard/add_edit_addresses.html')
+
+    def test_account_edit_address_view_with_invalid_user_method_get(self, db, user, client, address_factory):
+        """
+            Test can't access to edit address view with valid user
+        """
+
+        address = address_factory.create(customer=user)
+        url = reverse('account:edit_addresses', args=[address.id])
+        with pytest.raises(TypeError) as error:
+            client.get(url)
+
+        assert str(error.value) == "'AnonymousUser' object is not iterable"
+
+    def test_account_edit_address_view_with_valid_user_method_post(self, user, address_factory, client):
+        """
+            Test access to edit address view with valid user in method POST
+        """
+
+        client.force_login(user)
+
+        address = address_factory.create(customer=user)
+
+        url = reverse('account:edit_addresses', args=[address.id])
+        data = {
+            'full_name': 'kevin A',
+            'phone': '09192311248',
+            'address_line': 'iran',
+            'address_line2': 'iran2',
+            'town_city': 'tehran',
+            'postcode': '12345'
+        }
+        response = client.post(url, data=data)
+        all_address = Address.objects.count()
+
+        assert response.status_code == 302
+        assert all_address == 1
+        assertRedirects(response, reverse('account:addresses'))
+
+    def test_account_delete_address_view_with_invalid_user_method_get(self, user, address_factory, client):
+        """
+            Test can't access to delete address view with invalid user in method GET
+        """
+
+        address = address_factory.create(customer=user)
+        url = reverse('account:delete_addresses', args=[address.id])
+        response = client.get(url)
+        all_address = Address.objects.count()
+        redirect_url = f"{reverse('account:login')}?next={url}"
+
+        assert response.status_code == 302
+        assert all_address == 1
+        assertRedirects(response, redirect_url)
+
+    def test_account_delete_address_view_with_valid_user_method_get(self, user, address_factory, client):
+        """
+            Test access to delete address view with valid user in method GET
+        """
+
+        client.force_login(user)
+
+        address = address_factory.create(customer=user)
+        url = reverse('account:delete_addresses', args=[address.id])
+        response = client.get(url)
+        all_address = Address.objects.count()
+
+        assert response.status_code == 302
+        assert all_address == 0
+        assertRedirects(response, reverse('account:addresses'))
+
+    def test_account_set_default_address_view_with_invalid_user_method_get(self, user, address_factory,
+                                                                           client):
+        """
+            Test can't access to set default address view with invalid user in method GET
+        """
+
+        address = address_factory.create(customer=user)
+        url = reverse('account:set_default_addresses', args=[address.id])
+        response = client.get(url)
+        redirect_url = f"{reverse('account:login')}?next={url}"
+
+        assert response.status_code == 302
+        assertRedirects(response, redirect_url)
+
+    def test_account_set_default_address_view_with_valid_user_method_get(self, user, address_factory,
+                                                                         client):
+        """
+            Test access to set default address view with valid user in method GET
+        """
+
+        client.force_login(user)
+        address = address_factory.create(customer=user, default=False)
+        url = reverse('account:set_default_addresses', args=[address.id])
+        response = client.get(url)
+        response_address = Address.objects.get(id=address.id)
+
+        assert response.status_code == 302
+        assert response_address.default is True
+        assertRedirects(response, reverse('account:addresses'))
