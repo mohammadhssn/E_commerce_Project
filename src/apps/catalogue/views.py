@@ -37,7 +37,7 @@ class ProductDetailView(View):
         else:
             product = ProductInventory.objects.filter(
                 product__web_id=web_id).filter(is_default=True).values(
-                "id", "sku", "product__name", "store_price", "product_inventory__units").annotate(
+                "id", "sku", "product__id", "product__name", "store_price", "product_inventory__units").annotate(
                 field_a=ArrayAgg("attribute_values__attribute_value")).get()
 
         # must Change

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -114,6 +115,12 @@ class Product(models.Model):
         auto_now=True,
         verbose_name=_('date product last updated'),
         help_text=_('format Y-m-d H:M:S')
+    )
+
+    users_wishlist = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='user_wishlist',
+        blank=True
     )
 
     def get_absolute_url(self):

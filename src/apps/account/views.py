@@ -21,6 +21,7 @@ from .forms import (
 )
 from .mixins import CheckAccessTpPageWithSessionMixins
 from apps.utils import send_otp_code, get_instance_otpcode_from_session, delete_session_key
+from ..catalogue.models import Product, ProductInventory, Media
 
 
 class RegisterView(View):
@@ -397,3 +398,39 @@ class SetDefaultAddressView(LoginRequiredMixin, View):
         Address.objects.filter(pk=id, customer=request.user).update(default=True)
         messages.success(request, 'set default address successfully', 'success')
         return redirect('account:addresses')
+
+
+# wash list
+class WashListView(LoginRequiredMixin, View):
+    """
+        show all wash list for current user
+    """
+
+    template_name = 'account/dashboard/user_wash_list.html'
+
+    def get(self, request):
+        # products = ProductInventory.objects.filter(product__users_wishlist=request.user).values(
+        #     'product__name', 'product__description', 'product_id', 'store_price',
+        # )
+        products = ProductInventory.objects.prefetch_related('media_product_inventory').filter(
+            product__users_wishlist=request.user)
+
+        return render(request, self.template_name, {'wishlist': products})
+
+
+class AddWashListView(LoginRequiredMixin, View):
+    """
+        add item to wash list current user and user must be login
+        input: id product
+        output: add product to wash list user
+    """
+
+    def get(self, reqeust, id=None):
+        product = get_object_or_404(Product, pk=id)
+        if product.users_wishlist.filter(id=reqeust.user.id).exists():
+            product.users_wishlist.remove(reqeust.user)
+            messages.success(reqeust, product.name + 'has been removed from your wash list')
+        else:
+            product.users_wishlist.add(reqeust.user)
+            messages.success(reqeust, 'Added ' + product.name + ' to your wash list')
+        return redirect(reqeust.META['HTTP_REFERER'])

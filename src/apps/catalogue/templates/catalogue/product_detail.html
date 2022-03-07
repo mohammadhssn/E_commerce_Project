@@ -10,7 +10,6 @@
 
 {% block content %}
     <div class="container">
-        {% include 'inc/messages.html' %}
         <div class="row g-3">
             <div class="col-md-5 ps-3 col-lg-5 order-md-last p-0 order-1">
                 <div class="d-grid gap-2">
@@ -58,7 +57,8 @@
                     <button type="button" id="add-button" value="{{ product.id }}"
                             class="btn btn-success fw500">{% trans 'Add to basket' %}
                     </button>
-                    <a href="#" class="btn btn-light fw500" role="button"
+                    <a href="{% url 'account:add_wash_list' product.product__id %}" class="btn btn-light fw500"
+                       role="button"
                        aria-disabled="true">{% trans 'Add to Wish List' %}</a>
                 </div>
             </div>

@@ -22,4 +22,7 @@ urlpatterns = [
     path('addresses/edit/<uuid:id>/', views.EditAddressView.as_view(), name='edit_addresses'),
     path('addresses/delete/<uuid:id>/', views.DeleteAddressView.as_view(), name='delete_addresses'),
     path('addresses/set-default/<uuid:id>/', views.SetDefaultAddressView.as_view(), name='set_default_addresses'),
+    # Wash list
+    path('washlist/', views.WashListView.as_view(), name='wash_list'),
+    path('washlist/add-to-washlist/<int:id>/', views.AddWashListView.as_view(), name='add_wash_list'),
 ]
