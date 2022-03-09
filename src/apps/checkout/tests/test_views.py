@@ -57,3 +57,74 @@ class TestViews:
         """
 
         pass
+
+    def test_checkout_delivery_address_view_with_not_session_purchase_method_get(self, db, client):
+        """
+            Test can't access to view DeliveryAddressView with not session purchase
+        """
+
+        url = reverse('checkout:delivery_address')
+        response = client.get(url)
+
+        assert response.status_code == 302
+        assertRedirects(response, reverse('catalogue:home'))
+
+    def test_checkout_delivery_address_view_with_invalid_user_method_get(self, set_session_purchase, client):
+        """
+            Test can't access to view DeliveryAddressView with invalid user
+        """
+
+        url = reverse('checkout:delivery_address')
+        response = client.get(url)
+        redirect_url = f"{reverse('account:login')}?next={url}"
+
+        assert response.status_code == 302
+        assertRedirects(response, redirect_url)
+
+    def test_checkout_delivery_address_view_with_valid_user_method_get(self, user, set_session_purchase, client):
+        """
+            Test access to view DeliveryAddressView with session purchase and valid user
+        """
+
+        client.force_login(user)
+        url = reverse('checkout:delivery_address')
+        response = client.get(url)
+
+        assert response.status_code == 200
+        assertTemplateUsed(response, 'checkout/delivery_address.html')
+
+    ################################
+    def test_checkout_payment_selection_view_with_not_session_address_method_get(self, db, client):
+        """
+            Test can't access to view PaymentSelectionView with not session address
+        """
+
+        url = reverse('checkout:payment_selection')
+        response = client.get(url)
+
+        assert response.status_code == 302
+        assertRedirects(response, reverse('catalogue:home'))
+
+    def test_checkout_payment_selection_view_with_invalid_user_method_get(self, set_session_address, client):
+        """
+            Test can't access to view PaymentSelectionView with session address and invalid user
+        """
+
+        url = reverse('checkout:payment_selection')
+        response = client.get(url)
+        redirect_url = f"{reverse('account:login')}?next={url}"
+
+        assert response.status_code == 302
+        assertRedirects(response, redirect_url)
+
+    def test_checkout_payment_selection_view_with_valid_user_method_get(self, user, set_session_address, client):
+        """
+            Test access to view PaymentSelectionView with session address and valid user
+        """
+
+        client.force_login(user)
+        url = reverse('checkout:payment_selection')
+        response = client.get(url)
+
+        assert response.status_code == 200
+        assertTemplateUsed(response, 'checkout/payment_selection.html')

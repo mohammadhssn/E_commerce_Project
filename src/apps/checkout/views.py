@@ -66,7 +66,7 @@ class DeliveryAddressView(LoginRequiredMixin, View):
         if 'purchase' not in request.session:
             messages.success(request, 'Please select delivery option', 'success')
             try:
-                return redirect(request.Meta.get('HTTP_REFERER'))
+                return redirect(request.META.get('HTTP_REFERER'))
             except TypeError:
                 return redirect('catalogue:home')
 
@@ -93,12 +93,16 @@ class PaymentSelectionView(LoginRequiredMixin, View):
 
     template_name = 'checkout/payment_selection.html'
 
-    def get(self, request):
+    def dispatch(self, request, *args, **kwargs):
         if 'address' not in request.session:
             messages.info(request, 'Please select address option')
             try:
                 return redirect(request.META.get('HTTP_REFERER'))
             except TypeError:
                 return redirect('catalogue:home')
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request):
 
         return render(request, self.template_name)

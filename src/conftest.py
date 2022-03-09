@@ -87,6 +87,25 @@ def set_session_reset_password(db, client):
     session.save()
     return session
 
+
 # #############################################################################################################
 
-# app catalogue
+# app checkout
+@pytest.fixture
+def set_session_purchase(db, client):
+    session = client.session
+    session['purchase'] = {
+        'delivery_id': 1
+    }
+    session.save()
+    return session
+
+
+@pytest.fixture
+def set_session_address(db, client):
+    session = client.session
+    session['address'] = {
+        'address_id': 1
+    }
+    session.save()
+    return session
