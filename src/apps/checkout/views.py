@@ -85,7 +85,7 @@ class DeliveryAddressView(LoginRequiredMixin, View):
         return render(request, self.template_name, {'addresses': addresses})
 
 
-class PaymentSelection(LoginRequiredMixin, View):
+class PaymentSelectionView(LoginRequiredMixin, View):
     """
         View total prices and payment methods
         user must be logged in site
