@@ -491,3 +491,56 @@ class TestViewAddress:
         assert response.status_code == 302
         assert response_address.default is True
         assertRedirects(response, reverse('account:addresses'))
+
+
+class TestWashListView:
+
+    def test_account_wash_list_view_with_invalid_user_method_get(self, db, client):
+        """
+            Test can't access to WashListView with invalid user
+        """
+
+        url = reverse('account:wash_list')
+        response = client.get(url)
+        redirect_url = f"{reverse('account:login')}?next={url}"
+
+        assert response.status_code == 302
+        assertRedirects(response, redirect_url)
+
+    def test_account_wash_list_view_with_valid_user_method_get(self, user, client):
+        """
+            Test access to WashListView with valid user
+        """
+
+        client.force_login(user)
+        url = reverse('account:wash_list')
+        response = client.get(url)
+
+        assert response.status_code == 200
+        assertTemplateUsed(response, 'account/dashboard/user_wash_list.html')
+
+    def test_account_add_wash_list_view_with_invalid_user_method_get(self, db, product_factory, client):
+        """
+            Test can't access to AddWashListView with invalid user
+        """
+
+        product = product_factory.create()
+        url = reverse('account:add_wash_list', args=[product.id])
+        response = client.get(url)
+        redirect_url = f"{reverse('account:login')}?next={url}"
+
+        assert response.status_code == 302
+        assertRedirects(response, redirect_url)
+
+    def test_account_add_wash_list_view_with_valid_user_method_get(self, user, product_inventory_factory, client):
+        """
+            Test can't access to AddWashListView with valid user
+        """
+
+        client.force_login(user)
+        product = product_inventory_factory.create(product__web_id='123456789', is_default=True)
+        url = reverse('account:add_wash_list', args=[product.product.id])
+        response = client.get(url)
+
+        assert response.status_code == 302
+        assertRedirects(response, reverse('catalogue:product_detail', args=[product.product.web_id]))

@@ -1,10 +1,12 @@
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 
 from .models import DeliveryOption
 from ..basket.basket import Basket
+from apps.account.models import Address
 
 
 class DeliveryChoicesView(LoginRequiredMixin, View):
@@ -15,7 +17,11 @@ class DeliveryChoicesView(LoginRequiredMixin, View):
 
     def get(self, request):
         delivery_options = DeliveryOption.objects.filter(is_active=True)
-        return render(request, self.template_name, {'delivery_options': delivery_options})
+        is_active_option = False
+        if 'purchase' in request.session:
+            is_active_option = request.session['purchase']['delivery_id']
+        return render(request, self.template_name,
+                      {'delivery_options': delivery_options, 'is_active_option': is_active_option})
 
 
 class BasketUpdateDeliveryView(LoginRequiredMixin, View):
@@ -44,3 +50,55 @@ class BasketUpdateDeliveryView(LoginRequiredMixin, View):
 
         response = JsonResponse({'total': update_total_price, 'delivery_price': delivery_type.delivery_price})
         return response
+
+
+class DeliveryAddressView(LoginRequiredMixin, View):
+    """
+        Set address for delivery
+        input: user must be login in site
+        and session ['purchase'] exists.
+        output: set address
+    """
+
+    template_name = 'checkout/delivery_address.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if 'purchase' not in request.session:
+            messages.success(request, 'Please select delivery option', 'success')
+            try:
+                return redirect(request.Meta.get('HTTP_REFERER'))
+            except TypeError:
+                return redirect('catalogue:home')
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request):
+        session = request.session
+        addresses = Address.objects.filter(customer=request.user).order_by('-default')
+        if addresses:
+            if 'address' not in request.session:
+                session['address'] = {'address_id': str(addresses[0].id)}
+            else:
+                session['address']['address_id'] = str(addresses[0].id)
+                session.modified = True
+
+        return render(request, self.template_name, {'addresses': addresses})
+
+
+class PaymentSelection(LoginRequiredMixin, View):
+    """
+        View total prices and payment methods
+        user must be logged in site
+    """
+
+    template_name = 'checkout/payment_selection.html'
+
+    def get(self, request):
+        if 'address' not in request.session:
+            messages.info(request, 'Please select address option')
+            try:
+                return redirect(request.META.get('HTTP_REFERER'))
+            except TypeError:
+                return redirect('catalogue:home')
+
+        return render(request, self.template_name)

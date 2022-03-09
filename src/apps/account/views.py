@@ -397,6 +397,11 @@ class SetDefaultAddressView(LoginRequiredMixin, View):
         Address.objects.filter(customer=request.user, default=True).update(default=False)
         Address.objects.filter(pk=id, customer=request.user).update(default=True)
         messages.success(request, 'set default address successfully', 'success')
+
+        previous_url = request.META.get('HTTP_REFERER')
+        if 'delivery-address' in previous_url:
+            return redirect('checkout:delivery_address')
+
         return redirect('account:addresses')
 
 
@@ -433,4 +438,4 @@ class AddWashListView(LoginRequiredMixin, View):
         else:
             product.users_wishlist.add(reqeust.user)
             messages.success(reqeust, 'Added ' + product.name + ' to your wash list')
-        return redirect(reqeust.META['HTTP_REFERER'])
+        return redirect('catalogue:product_detail', product.web_id)

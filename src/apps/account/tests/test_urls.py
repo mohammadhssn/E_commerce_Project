@@ -129,3 +129,20 @@ class TestUrls:
         url = reverse('account:set_default_addresses', args=[uuid_id])
 
         assert resolve(url).func.view_class == views.SetDefaultAddressView
+
+    def test_account_wash_list_url(self):
+        """
+            Test wash list url can connect to view WashListView
+        """
+        url = reverse('account:wash_list')
+
+        assert resolve(url).func.view_class == views.WashListView
+
+    def test_account_add_wash_list_url(self):
+        """
+            Test wash list url can connect to view AddWashListView
+        """
+
+        url = reverse('account:add_wash_list', args=[1])
+
+        assert resolve(url).func.view_class == views.AddWashListView
