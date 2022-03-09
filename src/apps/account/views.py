@@ -399,7 +399,7 @@ class SetDefaultAddressView(LoginRequiredMixin, View):
         messages.success(request, 'set default address successfully', 'success')
 
         previous_url = request.META.get('HTTP_REFERER')
-        if 'delivery-address' in previous_url:
+        if previous_url and 'delivery-address' in previous_url:
             return redirect('checkout:delivery_address')
 
         return redirect('account:addresses')
