@@ -179,3 +179,5 @@ EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_PORT = config('EMAIL_PORT')
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'mohammadhssn Website'
+
+# django Debug Tool bar
