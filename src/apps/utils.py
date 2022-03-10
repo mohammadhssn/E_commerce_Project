@@ -1,4 +1,6 @@
 from django.shortcuts import get_object_or_404
+from django.core.mail import send_mail
+from django.utils.translation import gettext_lazy as _
 
 from apps.account.models import OtpCode
 from apps.melipayamak import Api
@@ -46,3 +48,16 @@ def delete_session_key(request=None, key=None):
         request.session.modified = True
     except Exception:
         pass
+
+
+def send_email_complete_payment(user=None):
+    """
+        if order create successfully send email
+    """
+    if user.email:
+        subject = _('Order successfully registered.')
+        message = _('Visit your career panel to view and follow up.')
+        from_email = 'mohammadhssnalizadeh78@gmail.com'
+        to = [user.email]
+        send_mail(subject, message, from_email, to)
+    return None
