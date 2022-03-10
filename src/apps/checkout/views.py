@@ -64,7 +64,7 @@ class DeliveryAddressView(LoginRequiredMixin, View):
 
     def dispatch(self, request, *args, **kwargs):
         if 'purchase' not in request.session:
-            messages.success(request, 'Please select delivery option', 'success')
+            messages.info(request, 'Please select delivery option', 'info')
             try:
                 return redirect(request.META.get('HTTP_REFERER'))
             except TypeError:
@@ -95,7 +95,7 @@ class PaymentSelectionView(LoginRequiredMixin, View):
 
     def dispatch(self, request, *args, **kwargs):
         if 'address' not in request.session:
-            messages.info(request, 'Please select address option')
+            messages.info(request, 'Please select address option', 'success')
             try:
                 return redirect(request.META.get('HTTP_REFERER'))
             except TypeError:

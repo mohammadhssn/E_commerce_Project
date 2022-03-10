@@ -106,3 +106,13 @@ class Basket:
 
     def save(self):
         self.session.modified = True
+
+    def clear(self):
+        """
+            Clear session
+        """
+
+        del self.session[BASKET_SESSION_KEY]
+        del self.session['address']
+        del self.session['purchase']
+        self.save()

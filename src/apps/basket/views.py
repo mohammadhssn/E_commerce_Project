@@ -11,11 +11,12 @@ class BasketSummaryView(View):
     """
         show all items in session basket in view
     """
+    template_name = 'basket/basket_summary.html'
 
     def get(self, request):
         basket = Basket(request)
 
-        return render(request, 'basket/basket_summary.html', {'basket': basket})
+        return render(request, self.template_name, {'basket': basket})
 
 
 class BasketAddView(View):
