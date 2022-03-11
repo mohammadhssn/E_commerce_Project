@@ -3,7 +3,6 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.contrib import messages
-from django.http import HttpResponseRedirect
 
 from apps.orders.models import Order, OrderItem
 from apps.basket.basket import Basket

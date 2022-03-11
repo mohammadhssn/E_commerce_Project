@@ -25,4 +25,6 @@ urlpatterns = [
     # Wash list
     path('washlist/', views.WashListView.as_view(), name='wash_list'),
     path('washlist/add-to-washlist/<int:id>/', views.AddWashListView.as_view(), name='add_wash_list'),
+    # orders
+    path('orders/', views.UserOrders.as_view(), name='user_orders'),
 ]

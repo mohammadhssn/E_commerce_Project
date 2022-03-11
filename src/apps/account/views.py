@@ -21,7 +21,8 @@ from .forms import (
 )
 from .mixins import CheckAccessTpPageWithSessionMixins
 from apps.utils import send_otp_code, get_instance_otpcode_from_session, delete_session_key
-from ..catalogue.models import Product, ProductInventory, Media
+from ..catalogue.models import Product, ProductInventory
+from apps.orders.models import Order
 
 
 class RegisterView(View):
@@ -439,3 +440,18 @@ class AddWashListView(LoginRequiredMixin, View):
             product.users_wishlist.add(reqeust.user)
             messages.success(reqeust, 'Added ' + product.name + ' to your wash list')
         return redirect('catalogue:product_detail', product.web_id)
+
+
+# orders
+class UserOrders(LoginRequiredMixin, View):
+    """
+        show all order To current user
+        user must be login in site
+    """
+
+    template_name = 'account/dashboard/user_orders.html'
+
+    def get(self, request):
+        user_id = request.user.id
+        orders = Order.objects.filter(user_id=user_id).filter(billing_status=True)
+        return render(request, self.template_name, {'orders': orders})
