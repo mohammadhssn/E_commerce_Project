@@ -19,37 +19,35 @@ class PaymentCompleteView(LoginRequiredMixin, View):
     """
 
     def dispatch(self, request, *args, **kwargs):
-        self.user = request.user
-        self.basket = Basket(request)
+
         try:
             self.address_session = request.session['address']['address_id']
-        except KeyError:
+        except KeyError or self.address_session is None:
             return redirect('catalogue:home')
-        if self.user and self.basket and self.address_session:
-            return super().dispatch(request, *args, **kwargs)
-        else:
-            return redirect('catalogue:home')
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request):
+        user = request.user
+        basket = Basket(request)
         address = get_object_or_404(Address, id=self.address_session)
 
         with transaction.atomic():
             order = Order.objects.create(
-                user_id=self.user.id,
-                full_name=self.user.full_name,
-                email=self.user.email,
-                phone=self.user.phone_number,
+                user_id=user.id,
+                full_name=user.full_name,
+                email=user.email,
+                phone=user.phone_number,
                 city=address.town_city,
                 address=address.address_line,
                 postal_code=address.postcode,
-                total_paid=self.basket.get_total_price(),
+                total_paid=basket.get_total_price(),
                 order_key='1234',
                 payment_option='payment option',
                 billing_status=True
             )
 
             order_id = order.pk
-            for item in self.basket:
+            for item in basket:
                 OrderItem.objects.create(
                     order_id=order_id,
                     product=item['product'],
@@ -57,7 +55,7 @@ class PaymentCompleteView(LoginRequiredMixin, View):
                     quantity=item['qty']
                 )
 
-            send_email_complete_payment(user=self.user)
+            send_email_complete_payment(user=user)
             messages.success(request, 'success', 'success')
             return redirect('orders:payment_success')
 

@@ -18,6 +18,8 @@ from tests.factories import (
     DeliveryOptionFactory,
     PaymentSelectionsFactory,
     AddressFactory,
+    OrderFactory,
+    OrderItemFactory
 )
 
 register(UserFactory)
@@ -38,6 +40,9 @@ register(ProductWithAttributeValuesFactory)
 
 register(DeliveryOptionFactory)
 register(PaymentSelectionsFactory)
+
+register(OrderFactory)
+register(OrderItemFactory)
 
 
 # User Fixture
@@ -109,3 +114,6 @@ def set_session_address(db, client):
     }
     session.save()
     return session
+
+
+

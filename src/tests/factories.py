@@ -16,6 +16,7 @@ from apps.catalogue.models import (
     ProductAttribute, ProductAttributeValue, ProductAttributeValues
 )
 from apps.checkout.models import DeliveryOption, PaymentSelections
+from apps.orders.models import Order, OrderItem
 
 fake = Faker()
 
@@ -197,6 +198,7 @@ class ProductWithAttributeValuesFactory(ProductInventoryFactory):
     )
 
 
+# =============================================================================
 # app checkout
 
 class DeliveryOptionFactory(factory.django.DjangoModelFactory):
@@ -217,3 +219,33 @@ class PaymentSelectionsFactory(factory.django.DjangoModelFactory):
         model = PaymentSelections
 
     name = fake.text()
+
+
+# =============================================================================
+# app orders
+
+class OrderFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Order
+
+    user = factory.SubFactory(UserFactory)
+    full_name = 'full name'
+    email = 'email@email.com'
+    address = 'address line'
+    city = 'shahrood'
+    phone = '09192311248'
+    postal_code = '123456'
+    total_paid = 999.99
+    order_key = '124566'
+    payment_option = 'payment option'
+    billing_status = False
+
+
+class OrderItemFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = OrderItem
+
+    order = factory.SubFactory(OrderFactory)
+    product = factory.SubFactory(ProductInventoryFactory)
+    price = 90.00
+    quantity = 1

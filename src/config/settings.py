@@ -156,10 +156,6 @@ AUTHENTICATION_BACKENDS = [
     'apps.account.authenticate.PhoneAuthBackend',
 ]
 
-# Config Session
-
-SESSION_COOKIE_AGE = 43800 * 60  # 1 month
-
 # Arvan Cloud Storage
 DEFAULT_FILE_STORAGE = config('DEFAULT_FILE_STORAGE')
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
