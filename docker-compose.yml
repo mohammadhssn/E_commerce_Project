@@ -12,3 +12,8 @@ services:
       - "5432:5432"
     restart: always
 
+  redis:
+    container_name: redise
+    image: redis
+    ports:
+      - "6379:6379"
