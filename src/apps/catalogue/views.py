@@ -3,6 +3,8 @@ from django.core.paginator import Paginator
 from django.db.models import Count
 from django.shortcuts import render, get_object_or_404
 from django.views import View
+from django.core.cache import cache
+from django.http import HttpResponse
 
 from .models import ProductInventory, ProductTypeAttribute, Media, Category
 
@@ -18,14 +20,26 @@ class HomeView(View):
 class ProductDetailView(View):
     """
         Product detail view
+        input: web_id product model
+        get attribute name and value for product
+        and use cache for cache set model ProductInventory and cache media product
     """
 
     template_name = 'catalogue/product_detail.html'
 
     def get(self, request, web_id=None):
 
-        product_inventory = ProductInventory.objects.filter(product__web_id=web_id)
+        if cache.get(web_id):
+            product_inventory = cache.get(web_id)
+        else:
+            try:
+                product_inventory = ProductInventory.objects.filter(product__web_id=web_id)
+                cache.set(web_id, product_inventory)
+            except ProductInventory.DoesNotExist:
+                return HttpResponse('this product dose not exists')
 
+        # product_inventory = ProductInventory.objects.filter(product__web_id=web_id)
+        # ===================================================================================================
         if request.GET:
             filter_arguments = []
             for value in request.GET.values():
@@ -40,7 +54,7 @@ class ProductDetailView(View):
             product = product_inventory.filter(
                 attribute_values__attribute_value__in=filter_arguments).annotate(
                 num_tags=Count('attribute_values')).filter(num_tags=len(filter_arguments)).values(
-                "id", "sku", "product__name", "store_price", "product_inventory__units").annotate(
+                "id", "sku", "product__id", "product__name", "store_price", "product_inventory__units").annotate(
                 field_a=ArrayAgg("attribute_values__attribute_value")).get()
 
         else:
@@ -53,17 +67,28 @@ class ProductDetailView(View):
                 product__web_id=web_id).filter(is_default=True).values(
                 "id", "sku", "product__id", "product__name", "store_price", "product_inventory__units").annotate(
                 field_a=ArrayAgg("attribute_values__attribute_value")).get()
+        # ===================================================================================================
+        # must be Change
+        web_id_image_key = f'{web_id}_image'
+        if cache.get(web_id_image_key):
+            product_image = cache.get(web_id_image_key)
+        else:
+            try:
+                product_image = Media.objects.filter(
+                    product_inventory__product__web_id=web_id)
+                cache.set(web_id_image_key, product_image)
+            except Media.DoesNotExist:
+                return HttpResponse('this Media dose not exists')
 
-        # must Change
-        product_image = Media.objects.filter(
-            product_inventory__product__web_id=web_id)
-
+        # product_image = Media.objects.filter(
+        #     product_inventory__product__web_id=web_id)
+        # ===================================================================================================
         # product_attribute_values = ProductInventory.objects.filter(product__web_id=web_id).distinct().values(
         #     "attribute_values__product_attribute__name", "attribute_values__attribute_value")
 
         product_attribute_values = product_inventory.filter(product__web_id=web_id).distinct().values(
             "attribute_values__product_attribute__name", "attribute_values__attribute_value")
-
+        # ===================================================================================================
         product_type_attributes = ProductTypeAttribute.objects.filter(
             product_type__product_type__product__web_id=web_id).distinct().values("product_attribute__name")
 
@@ -75,6 +100,9 @@ class ProductDetailView(View):
 class CategoryListView(View):
     """
         List of Category
+        input: slug form model Category
+        and get category and get products with filter by category instance
+        and use paginator for show products (10 product every page)
     """
 
     template_name = 'catalogue/category.html'

@@ -1,6 +1,5 @@
 from ..settings import *
 
-
 # debug_toolbar settings
 if DEBUG:
     INTERNAL_IPS = ("127.0.0.1",)
@@ -26,3 +25,10 @@ if DEBUG:
     DEBUG_TOOLBAR_CONFIG = {
         "INTERCEPT_REDIRECTS": False,
     }
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379',
+    }
+}

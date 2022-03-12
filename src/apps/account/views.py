@@ -418,6 +418,7 @@ class WashListView(LoginRequiredMixin, View):
         # products = ProductInventory.objects.filter(product__users_wishlist=request.user).values(
         #     'product__name', 'product__description', 'product_id', 'store_price',
         # )
+
         products = ProductInventory.objects.prefetch_related('media_product_inventory').filter(
             product__users_wishlist=request.user)
 
