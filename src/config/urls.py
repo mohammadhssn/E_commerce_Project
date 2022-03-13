@@ -17,6 +17,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 
+
+def e():
+    return 1 / 0
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/', include('apps.account.urls', namespace='account')),
@@ -24,6 +29,8 @@ urlpatterns = [
     path('checkout/', include('apps.checkout.urls', namespace='checkout')),
     path('oreders/', include('apps.orders.urls', namespace='orders')),
     path('', include('apps.catalogue.urls', namespace='catalogue')),
+    path('error/', e),
+
 ]
 
 if settings.DEBUG:

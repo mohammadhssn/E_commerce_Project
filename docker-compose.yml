@@ -1,19 +1,90 @@
 version: '3.8'
 
 services:
+
+  app:
+    build:
+      context: .
+    command: sh -c "python manage.py wait_for_db && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    container_name: app
+    volumes:
+      - ./src:/src
+      - ./src/static:/app/static
+    networks:
+      - main
+    expose:
+      - "8000"
+    depends_on:
+      - pgdb
+      - rabbitmq
+    environment:
+      - REDIS_HOST=redis
+    restart: always
+
   pgdb:
     container_name: pgdb
-    image: postgres
+    image: postgres:14.2-alpine
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     ports:
       - "5432:5432"
+    networks:
+      - main
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     restart: always
 
   redis:
-    container_name: redise
-    image: redis
+    container_name: redis
+    image: redis:7.0-rc2-alpine
     ports:
       - "6379:6379"
+    networks:
+      - main
+    restart: always
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.9.13-alpine
+    networks:
+      - main
+    ports:
+      - "5672:5672"
+    restart: always
+
+  celery_worker:
+    container_name: celery_worker
+    command: "celery -A config worker -l INFO"
+    depends_on:
+      - pgdb
+      - rabbitmq
+      - app
+    build: .
+    environment:
+      - C_FORCE_ROOT="true"
+    networks:
+      - main
+    restart: always
+
+  nginx:
+    container_name: nginx
+    command: nginx -g 'daemon off;'
+    depends_on:
+      - app
+    image: nginx:1.21.6-alpine
+    networks:
+      - main
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./src/static:/app/static
+    ports:
+      - "80:80"
+    restart: always
+
+networks:
+  main:
+
+volumes:
+  postgres_data:

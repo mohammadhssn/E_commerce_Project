@@ -1,10 +1,45 @@
-from ..settings import *
+from config.envs.base import *
+import os
 import sentry_sdk
+
 from sentry_sdk.integrations.django import DjangoIntegration
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = str(os.getenv('SECRET_KEY'))
+
+# Arvan Cloud Storage
+DEFAULT_FILE_STORAGE = str(os.getenv('DEFAULT_FILE_STORAGE'))
+AWS_ACCESS_KEY_ID = str(os.getenv('AWS_ACCESS_KEY_ID'))
+AWS_SECRET_ACCESS_KEY = str(os.getenv('AWS_SECRET_ACCESS_KEY'))
+AWS_STORAGE_BUCKET_NAME = str(os.getenv('AWS_STORAGE_BUCKET_NAME'))
+AWS_SERVICE_NAME = str(os.getenv('AWS_SERVICE_NAME'))
+AWS_S3_ENDPOINT_URL = str(os.getenv('AWS_S3_ENDPOINT_URL'))
+AWS_S3_FILE_OVERWRITE = False
+# AWS_LOCAL_STORAGE = f'{BASE_DIR}/aws/'
+
+# Email backend confirm
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST_USER = str(os.getenv('EMAIL_HOST_USER'))
+EMAIL_HOST_PASSWORD = str(os.getenv('EMAIL_HOST_PASSWORD'))
+EMAIL_HOST = str(os.getenv('EMAIL_HOST'))
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'mohammadhssn Website'
 
 # debug_toolbar settings
 if DEBUG:
-    INTERNAL_IPS = ("127.0.0.1",)
+    def custom_show_toolbar(request):
+        return True  # Always show toolbar, for example purposes only.
+
+
+    DEBUG_TOOLBAR_CONFIG = {
+        'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,
+    }
+    INTERNAL_IPS = ("0.0.0.0",)
     MIDDLEWARE += ("debug_toolbar.middleware.DebugToolbarMiddleware",)
 
     INSTALLED_APPS += ("debug_toolbar",)
@@ -24,15 +59,16 @@ if DEBUG:
         "debug_toolbar.panels.redirects.RedirectsPanel",
     ]
 
-    DEBUG_TOOLBAR_CONFIG = {
-        "INTERCEPT_REDIRECTS": False,
-    }
+    # DEBUG_TOOLBAR_CONFIG = {
+    #     "INTERCEPT_REDIRECTS": False,
+    # }
 
 # Config redis cache
+REDIS_HOST = os.environ.get('REDIS_HOST', '127.0.0.1')
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379',
+        'LOCATION': f'redis://{REDIS_HOST}:6379',
     }
 }
 
