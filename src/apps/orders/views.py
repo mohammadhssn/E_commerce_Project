@@ -7,7 +7,7 @@ from django.contrib import messages
 from apps.orders.models import Order, OrderItem
 from apps.basket.basket import Basket
 from apps.account.models import Address
-from apps.utils import send_email_complete_payment
+from .tasks import send_email_complete_order_task
 
 
 class PaymentCompleteView(LoginRequiredMixin, View):
@@ -54,7 +54,7 @@ class PaymentCompleteView(LoginRequiredMixin, View):
                     quantity=item['qty']
                 )
 
-            send_email_complete_payment(user=user)
+            send_email_complete_order_task.delay(user.pk)
             messages.success(request, 'success', 'success')
             return redirect('orders:payment_success')
 

@@ -11,21 +11,21 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
-from decouple import config
 
+# SECRET_KEY = config('SECRET_KEY')
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
+# SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -84,16 +84,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -137,9 +132,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
+# STATICFILES_DIRS = [
+#     BASE_DIR / 'static',
+# ]
+STATIC_ROOT = BASE_DIR / 'static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -156,24 +152,22 @@ AUTHENTICATION_BACKENDS = [
     'apps.account.authenticate.PhoneAuthBackend',
 ]
 
-# Arvan Cloud Storage
-DEFAULT_FILE_STORAGE = config('DEFAULT_FILE_STORAGE')
-AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
-AWS_SERVICE_NAME = config('AWS_SERVICE_NAME')
-AWS_S3_ENDPOINT_URL = config('AWS_S3_ENDPOINT_URL')
-AWS_S3_FILE_OVERWRITE = False
-AWS_LOCAL_STORAGE = f'{BASE_DIR}/aws/'
-
-# Email backend confirm
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_PORT = config('EMAIL_PORT')
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'mohammadhssn Website'
-
-# django Debug Tool bar
+# # Arvan Cloud Storage
+# # DEFAULT_FILE_STORAGE = config('DEFAULT_FILE_STORAGE')
+# # AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+# # AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+# # AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+# # AWS_SERVICE_NAME = config('AWS_SERVICE_NAME')
+# # AWS_S3_ENDPOINT_URL = config('AWS_S3_ENDPOINT_URL')
+# AWS_S3_FILE_OVERWRITE = False
+# AWS_LOCAL_STORAGE = f'{BASE_DIR}/aws/'
+#
+# # Email backend confirm
+# # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# # EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+# # EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+# # EMAIL_HOST = config('EMAIL_HOST')
+# # EMAIL_PORT = config('EMAIL_PORT')
+# EMAIL_USE_TLS = True
+# DEFAULT_FROM_EMAIL = 'mohammadhssn Website'
