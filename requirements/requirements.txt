@@ -24,6 +24,7 @@ Django==4.0.3
 django-debug-toolbar==3.2.4
 django-js-asset==2.0.0
 django-mptt==0.13.4
+django-robots==5.0
 django-storages==1.12.3
 factory-boy==3.2.1
 Faker==13.3.1

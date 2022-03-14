@@ -7,17 +7,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# SECRET_KEY = config('SECRET_KEY')
+# debug
+DEBUG = False
+
 SECRET_KEY = str(os.getenv('SECRET_KEY'))
-
-INSTALLED_APPS += [
-    'django.contrib.sites',
-    'django.contrib.sitemaps',
-
-    # third-party apps
-    'robots',
-]
-SITE_ID = 1
 
 # Arvan Cloud Storage
 DEFAULT_FILE_STORAGE = str(os.getenv('DEFAULT_FILE_STORAGE'))
@@ -30,47 +23,14 @@ AWS_S3_FILE_OVERWRITE = False
 # AWS_LOCAL_STORAGE = f'{BASE_DIR}/aws/'
 
 # Email backend confirm
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST_USER = str(os.getenv('EMAIL_HOST_USER'))
 EMAIL_HOST_PASSWORD = str(os.getenv('EMAIL_HOST_PASSWORD'))
 EMAIL_HOST = str(os.getenv('EMAIL_HOST'))
 EMAIL_PORT = os.getenv('EMAIL_PORT')
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'mohammadhssn Website'
-
-# debug_toolbar settings
-if DEBUG:
-    def custom_show_toolbar(request):
-        return True  # Always show toolbar, for example purposes only.
-
-
-    DEBUG_TOOLBAR_CONFIG = {
-        'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,
-    }
-    INTERNAL_IPS = ("0.0.0.0",)
-    MIDDLEWARE += ("debug_toolbar.middleware.DebugToolbarMiddleware",)
-
-    INSTALLED_APPS += ("debug_toolbar",)
-
-    DEBUG_TOOLBAR_PANELS = [
-        "debug_toolbar.panels.versions.VersionsPanel",
-        "debug_toolbar.panels.timer.TimerPanel",
-        "debug_toolbar.panels.settings.SettingsPanel",
-        "debug_toolbar.panels.headers.HeadersPanel",
-        "debug_toolbar.panels.request.RequestPanel",
-        "debug_toolbar.panels.sql.SQLPanel",
-        "debug_toolbar.panels.staticfiles.StaticFilesPanel",
-        "debug_toolbar.panels.templates.TemplatesPanel",
-        "debug_toolbar.panels.cache.CachePanel",
-        "debug_toolbar.panels.signals.SignalsPanel",
-        "debug_toolbar.panels.logging.LoggingPanel",
-        "debug_toolbar.panels.redirects.RedirectsPanel",
-    ]
-
-    # DEBUG_TOOLBAR_CONFIG = {
-    #     "INTERCEPT_REDIRECTS": False,
-    # }
 
 # Config redis cache
 REDIS_HOST = os.environ.get('REDIS_HOST', '127.0.0.1')
@@ -128,8 +88,23 @@ sentry_sdk.init(
     send_default_pii=True
 )
 
-# DataBase Config
+# XSS
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
 
+# SSL
+SECURE_SSL_REDIRECT = True
+
+# HTTPS
+SECURE_HSTS_SECONDS = 86400  # 1 day
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# COOKIE
+CSRF_COOKIE_SECURE = True  # to avoid transmitting the CSRF cookie over HTTP accidentally.
+SESSION_COOKIE_SECURE = True  # to avoid transmitting the session cookie over HTTP accidentally.
+
+# DataBase
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
