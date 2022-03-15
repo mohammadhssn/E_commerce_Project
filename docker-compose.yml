@@ -2,6 +2,23 @@ version: '3.8'
 
 services:
 
+  celery_worker:
+    container_name: celery_worker
+    command: "celery -A config worker -l INFO"
+    depends_on:
+      - app
+      - postgresql
+      - rabbitmq
+    build:
+      context: .
+    environment:
+      - C_FORCE_ROOT="true"
+    networks:
+      - main
+    env_file:
+      - .env
+    restart: always
+
   app:
     build:
       context: .
@@ -15,15 +32,18 @@ services:
     expose:
       - "8000"
     depends_on:
-      - pgdb
+      - postgresql
       - rabbitmq
     environment:
       - REDIS_HOST=redis
+      - ESEARCH_HOST=esearch
+    env_file:
+      - .env
     restart: always
 
-  pgdb:
-    container_name: pgdb
-    image: postgres:14.2-alpine
+  postgresql:
+    container_name: postgresql
+    image: postgres:latest
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
@@ -54,19 +74,6 @@ services:
       - "5672:5672"
     restart: always
 
-  celery_worker:
-    container_name: celery_worker
-    command: "celery -A config worker -l INFO"
-    depends_on:
-      - pgdb
-      - rabbitmq
-      - app
-    build: .
-    environment:
-      - C_FORCE_ROOT="true"
-    networks:
-      - main
-    restart: always
 
   nginx:
     container_name: nginx
@@ -82,6 +89,23 @@ services:
     ports:
       - "80:80"
     restart: always
+
+  esearch:
+    container_name: esearch
+    image: elasticsearch:7.17.1
+    environment:
+      - cluster.name=ecommerce-elasticsearch
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - ES_JAVA_OPTS=-Xms128m -Xmx128m
+    ports:
+      - "9200:9200"
+    networks:
+      - main
+    depends_on:
+      - postgresql
+    volumes:
+      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
 
 networks:
   main:

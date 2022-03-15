@@ -11,6 +11,13 @@
                                 d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z"></path>
                     </svg>
                 </a>
+                <form class="d-flex w-45" action="{% url 'search:search' %}" method="get">
+                    <input class="form-control me-1" name="q" id="q" type="search" placeholder="Search products"
+                           aria-label="Search">
+                    <button class="btn btn-outline-secondary" type="submit">{% trans 'Search' %}</button>
+                </form>
+
+
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-none d-md-block fw500" href="#" id="navbarDropdown"
@@ -25,6 +32,7 @@
                                 </svg>
                             </i>
                         </a>
+
                         <ul class="dropdown-menu rounded-0 border-0" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="{% url 'catalogue:home' %}">{% trans 'All' %}</a></li>
 
@@ -35,7 +43,6 @@
                                         <a class="dropdown-item"
                                            href="{{ children.get_absolute_url }}">-------------->{{ children.name|title }}</a>
                                     {% endfor %}
-
                                 </li>
                             {% endfor %}
                         </ul>
@@ -64,7 +71,7 @@
                                    data-bs-toggle="dropdown" aria-expanded="false">
                                     <div class="small text-muted">{% trans 'Hello,' %}
                                         {% if user.is_authenticated %}
-                                            {{ request.user.name }}
+                                            {{ request.user.phone_number }}
                                         {% else %}
                                             {% trans 'Login' %}
                                         {% endif %}
@@ -121,10 +128,10 @@
                     <span class="fs15 fw500">{% trans 'Basket' %}</span>
                 </a>
             </div>
-            <form class="d-flex w-100 d-md-none">
-                <input class="form-control me-2" type="search" placeholder="Search products or FAQ" aria-label="Search">
-                <button class="btn btn-outline-secondary" type="submit">{% trans 'Search' %}</button>
-            </form>
+            {#            <form class="d-flex w-45">#}
+            {#                <input class="form-control me-1" type="search" placeholder="Search products or FAQ" aria-label="Search">#}
+            {#                <button class="btn btn-outline-secondary" type="submit">{% trans 'Search' %}</button>#}
+            {#            </form>#}
         </div>
     </nav>
 </header>

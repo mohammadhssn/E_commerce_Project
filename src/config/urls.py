@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include, re_path
+from django.urls import path, include
 from django.conf import settings
 from django.contrib.sitemaps.views import sitemap
 
@@ -27,8 +27,9 @@ sitemaps = {
 }
 
 urlpatterns = [
+    path('search/', include('apps.search.urls', namespace='search')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}),
-    re_path(r'^robot\.txt$', include('robots.urls')),
+    path('robot.txt', include('robots.urls')),
     path('adminstartion@mohammadhssn78/', admin.site.urls),
     path('account/', include('apps.account.urls', namespace='account')),
     path('basket/', include('apps.basket.urls', namespace='basket')),

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+
+{% block title %}
+    {% trans 'Store' %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="container">
+            <div class="row">
+                <div class="album py-5">
+                    <div class="pb-3">
+                        <h1 class="h3">{% trans 'Search for:' %} '{{ query }}'</h1>
+                    </div>
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
+                        {% for product in response %}
+                            <div class="col">
+                                <div class="card border-0">
+
+                                    {% for image in product.media_product_inventory %}
+                                        {% if image.is_feature %}
+                                            <img class="img-fluid" src="{{ image.image }}"
+                                                 alt="{{ image.alt_text }}">
+                                        {% endif %}
+                                    {% endfor %}
+                                    <div class="card-body px-0">
+                                        <p class="card-text">
+                                            <a class="text-dark text-decoration-none"
+                                               href="{% url 'catalogue:product_detail' product.product.web_id %}">{{ product.product.name }}</a>
+                                        </p>
+                                        <div class="fw-bold">$ {{ product.store_price }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="col-12">{% trans 'There are currently no products active' %}</div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+                <!-- Pager-->
+                {% if response.has_previous %}
+                    <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase"
+                                                                    href="{% url 'search:search' %}?q={{ query }}&?page={{ response.previous_page_number }}">
+                        &larr;</a></div><br><br><br>
+                {% endif %}
+
+                {% if response.has_next %}
+                    <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase"
+                                                                    href="{% url 'search:search' %}?q={{ query }}&page={{ response.next_page_number }}">
+                        &rarr;</a></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

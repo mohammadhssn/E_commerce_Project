@@ -13,9 +13,12 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 INSTALLED_APPS += [
     'django.contrib.sites',
     'django.contrib.sitemaps',
+    # Local apps
+    'apps.search.apps.SearchConfig',
 
     # third-party apps
     'robots',
+    'django_elasticsearch_dsl',
 ]
 SITE_ID = 1
 
@@ -129,14 +132,18 @@ sentry_sdk.init(
 )
 
 # DataBase Config
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': str(os.getenv('NAME')),
         'USER': str(os.getenv('USER')),
-        'PASSWORD': str(os.getenv('PASSWORD')),
-        'HOST': 'pgdb',
-        'PORT': str(os.getenv('PORT')),
+        'PASSWORD': str(os.getenv('PASSWORD', 'postgres')),
+        'HOST': 'postgresql',
+        'PORT': str(os.getenv('PORT', 5432)),
     }
+}
+
+ESEARCH_HOST = os.environ.get('ESEARCH_HOST', 'localhost:9200')
+ELASTICSEARCH_DSL = {
+    'default': {'hosts': ESEARCH_HOST}
 }
