@@ -22,14 +22,16 @@
 
                                     {% for image in product.media_product_inventory.all %}
                                         {% if image.is_feature %}
-                                            <img class="img-fluid" src="{{ image.image.url }}"
-                                                 alt="{{ image.alt_text }}">
+                                            <a href="{{ product.product.get_absolute_url }}" target="_blank">
+                                                <img class="img-fluid" src="{{ image.image.url }}"
+                                                     alt="{{ image.alt_text }}"></a>
                                         {% endif %}
                                     {% endfor %}
+
                                     <div class="card-body px-0">
                                         <p class="card-text">
                                             <a class="text-dark text-decoration-none"
-                                               href="{% url 'catalogue:product_detail' product.product.web_id %}">{{ product.product.name }}</a>
+                                               href="{{ product.product.get_absolute_url }}">{{ product.product.name }}</a>
                                         </p>
                                         <div class="fw-bold">$ {{ product.store_price }}</div>
                                     </div>

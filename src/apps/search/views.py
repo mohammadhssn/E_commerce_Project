@@ -34,8 +34,6 @@ class SearchProductInventory(View):
             )
             search = self.search_document.search().query(q)
             response = search.execute()
-            print('/' * 90)
-            print(response)
             paginator = Paginator(response, 1)  # Show 10 contacts per page.
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
