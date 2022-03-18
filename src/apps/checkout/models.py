@@ -18,14 +18,12 @@ class DeliveryOption(models.Model):
         verbose_name=_('delivery_name'),
         help_text=_('format: required')
     )
-    delivery_price = models.DecimalField(
-        max_digits=5,
-        decimal_places=2,
+    delivery_price = models.IntegerField(
         verbose_name=_('delivery price'),
-        help_text=_('Maximum 999.99'),
+        help_text=_('format:price Toman'),
         error_messages={
             'name': {
-                'max_length': _('The price must be between 0 and 999.'),
+                'max_length': _('the price must be positive')
             },
         }
     )

@@ -1,8 +1,7 @@
-from decimal import Decimal
-
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 from apps.catalogue.models import ProductInventory
 
@@ -47,10 +46,9 @@ class Order(models.Model):
         auto_now=True,
         verbose_name=_('updated')
     )
-    total_paid = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
+    total_paid = models.IntegerField(
         verbose_name=_('total paid'),
+        help_text=_('format:price Toman'),
     )
     order_key = models.CharField(
         max_length=200,
@@ -64,6 +62,13 @@ class Order(models.Model):
     billing_status = models.BooleanField(
         default=False,
         verbose_name=_('billing status')
+    )
+    discount = models.IntegerField(
+        blank=True,
+        null=True,
+        default=None,
+        verbose_name=_('Discount coupon percentage'),
+        help_text=_('format: not required')
     )
 
     class Meta:
@@ -86,10 +91,9 @@ class OrderItem(models.Model):
         related_name='order_items',
         verbose_name=_('product')
     )
-    price = models.DecimalField(
-        max_digits=5,
-        decimal_places=2,
-        verbose_name=_('price')
+    price = models.IntegerField(
+        verbose_name=_('price'),
+        help_text=_('format:price Toman'),
     )
     quantity = models.PositiveIntegerField(
         default=1,
@@ -98,3 +102,17 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f'{self.order.user} : {str(self.pk)}'
+
+
+class Coupon(models.Model):
+    code = models.CharField(
+        max_length=50,
+        unique=True
+    )
+    valid_from = models.DateTimeField()
+    valid_to = models.DateTimeField()
+    discount = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
+    active = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.code

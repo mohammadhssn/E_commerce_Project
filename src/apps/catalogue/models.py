@@ -279,45 +279,39 @@ class ProductInventory(models.Model):
         verbose_name=_('default selection'),
         help_text=_('format: true=sub-product visible')
     )
-    retail_price = models.DecimalField(
-        max_digits=5,
-        decimal_places=2,
+    retail_price = models.IntegerField(
         unique=False,
         null=False,
         blank=False,
         verbose_name=_('recommended retail price'),
-        help_text=_('format: maximum price 999.99'),
+        help_text=_('format:price Toman'),
         error_messages={
             'name': {
-                'max_length': _('the price must be between 0 and 999.99')
+                'max_length': _('the price must be positive')
             },
         }
     )
-    store_price = models.DecimalField(
-        max_digits=5,
-        decimal_places=2,
+    store_price = models.IntegerField(
         unique=False,
         null=False,
         blank=False,
         verbose_name=_('regular store price'),
-        help_text=_('format: maximum price 999.99'),
+        help_text=_('format:price Toman'),
         error_messages={
             'name': {
-                'max_length': _('the price must be between 0 and 999.99')
+                'max_length': _('the price must be positive')
             },
         }
     )
-    sale_price = models.DecimalField(
-        max_digits=5,
-        decimal_places=2,
+    sale_price = models.IntegerField(
         unique=False,
         null=False,
         blank=False,
         verbose_name=_('sale price'),
-        help_text=_('format: maximum price 999.99'),
+        help_text=_('format:price Toman'),
         error_messages={
             'name': {
-                'max_length': _('the price must be between 0 and 999.99')
+                'max_length': _('the price must be positive')
             },
         }
     )

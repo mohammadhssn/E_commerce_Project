@@ -16,7 +16,7 @@ from apps.catalogue.models import (
     ProductAttribute, ProductAttributeValue, ProductAttributeValues
 )
 from apps.checkout.models import DeliveryOption, PaymentSelections
-from apps.orders.models import Order, OrderItem
+from apps.orders.models import Order, OrderItem, Coupon
 
 fake = Faker()
 
@@ -206,7 +206,7 @@ class DeliveryOptionFactory(factory.django.DjangoModelFactory):
         model = DeliveryOption
 
     delivery_name = fake.text()
-    delivery_price = '10.00'
+    delivery_price = 10000
     delivery_method = 'DD'
     delivery_timeframe = '0 days'
     delivery_window = fake.text()
@@ -235,10 +235,11 @@ class OrderFactory(factory.django.DjangoModelFactory):
     city = 'shahrood'
     phone = '09192311248'
     postal_code = '123456'
-    total_paid = 999.99
+    total_paid = 99000
     order_key = '124566'
     payment_option = 'payment option'
     billing_status = False
+    discount = 0
 
 
 class OrderItemFactory(factory.django.DjangoModelFactory):
@@ -247,5 +248,16 @@ class OrderItemFactory(factory.django.DjangoModelFactory):
 
     order = factory.SubFactory(OrderFactory)
     product = factory.SubFactory(ProductInventoryFactory)
-    price = 90.00
+    price = 90000
     quantity = 1
+
+
+class CouponFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Coupon
+
+    code = 'ABC'
+    valid_from = '2022-03-18 17:18:29.279092'
+    valid_to = '2022-03-19 17:18:29.279092'
+    discount = 50
+    active = True

@@ -73,6 +73,10 @@ class DeliveryAddressView(LoginRequiredMixin, View):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request):
+        # one_days = datetime.datetime.now() + timezone.timedelta(days=1)
+        # orders = Order.objects.filter(user=request.user, billing_status=False, created__gt=one_days)
+        # orders.delete()
+
         session = request.session
         addresses = Address.objects.filter(customer=request.user).order_by('-default')
         if addresses:
@@ -83,26 +87,3 @@ class DeliveryAddressView(LoginRequiredMixin, View):
                 session.modified = True
 
         return render(request, self.template_name, {'addresses': addresses})
-
-
-class PaymentSelectionView(LoginRequiredMixin, View):
-    """
-        View total prices and payment methods
-        user must be logged in site
-    """
-
-    template_name = 'checkout/payment_selection.html'
-
-    def dispatch(self, request, *args, **kwargs):
-        if 'address' not in request.session:
-            messages.info(request, 'Please select address option', 'success')
-            try:
-                return redirect(request.META.get('HTTP_REFERER'))
-            except TypeError:
-                return redirect('catalogue:home')
-
-        return super().dispatch(request, *args, **kwargs)
-
-    def get(self, request):
-
-        return render(request, self.template_name)

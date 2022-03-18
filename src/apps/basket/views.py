@@ -74,6 +74,6 @@ class BasketUpdateView(View):
         basket.update(product=product_id, qty=product_qty)
 
         basket_qty = basket.__len__()
-        basket_total = basket.get_total_price()
+        basket_total = basket.get_subtotal_price()
         response = JsonResponse({'qty': basket_qty, 'subtotal': basket_total})
         return response

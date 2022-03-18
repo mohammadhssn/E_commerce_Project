@@ -33,12 +33,3 @@ class TestUrls:
         url = reverse('checkout:delivery_address')
 
         assert resolve(url).func.view_class == views.DeliveryAddressView
-
-    def test_checkout_payment_selection_url(self):
-        """
-            Test access url in view paymentSelectionView
-        """
-
-        url = reverse('checkout:payment_selection')
-
-        assert resolve(url).func.view_class == views.PaymentSelectionView

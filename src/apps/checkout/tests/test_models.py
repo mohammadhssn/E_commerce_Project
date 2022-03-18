@@ -8,9 +8,9 @@ class TestDeliveryOptionModel:
     @pytest.mark.parametrize(
         'delivery_name, delivery_price, delivery_method, delivery_timeframe, delivery_window, order',
         [
-            ('post_express', '10.00', 'IS', '3 days', 'test_window', 1),
-            ('post_airport', '20.00', 'HD', '2 days', 'test_window', 2),
-            ('post', '00.00', 'DD', 'now', 'test_window', 1),
+            ('post_express', '10000', 'IS', '3 days', 'test_window', 1),
+            ('post_airport', '20000', 'HD', '2 days', 'test_window', 2),
+            ('post', '0', 'DD', 'now', 'test_window', 1),
         ]
     )
     def test_checkout_db_delivery_option_insert_data(self, db, delivery_option_factory, delivery_name, delivery_price,

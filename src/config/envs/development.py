@@ -43,33 +43,33 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'mohammadhssn Website'
 
 # debug_toolbar settings
-if DEBUG:
-    def custom_show_toolbar(request):
-        return True  # Always show toolbar, for example purposes only.
-
-
-    DEBUG_TOOLBAR_CONFIG = {
-        'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,
-    }
-    INTERNAL_IPS = ("0.0.0.0",)
-    MIDDLEWARE += ("debug_toolbar.middleware.DebugToolbarMiddleware",)
-
-    INSTALLED_APPS += ("debug_toolbar",)
-
-    DEBUG_TOOLBAR_PANELS = [
-        "debug_toolbar.panels.versions.VersionsPanel",
-        "debug_toolbar.panels.timer.TimerPanel",
-        "debug_toolbar.panels.settings.SettingsPanel",
-        "debug_toolbar.panels.headers.HeadersPanel",
-        "debug_toolbar.panels.request.RequestPanel",
-        "debug_toolbar.panels.sql.SQLPanel",
-        "debug_toolbar.panels.staticfiles.StaticFilesPanel",
-        "debug_toolbar.panels.templates.TemplatesPanel",
-        "debug_toolbar.panels.cache.CachePanel",
-        "debug_toolbar.panels.signals.SignalsPanel",
-        "debug_toolbar.panels.logging.LoggingPanel",
-        "debug_toolbar.panels.redirects.RedirectsPanel",
-    ]
+# if DEBUG:
+#     def custom_show_toolbar(request):
+#         return True  # Always show toolbar, for example purposes only.
+#
+#
+#     DEBUG_TOOLBAR_CONFIG = {
+#         'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,
+#     }
+#     INTERNAL_IPS = ("0.0.0.0",)
+#     MIDDLEWARE += ("debug_toolbar.middleware.DebugToolbarMiddleware",)
+#
+#     INSTALLED_APPS += ("debug_toolbar",)
+#
+#     DEBUG_TOOLBAR_PANELS = [
+#         "debug_toolbar.panels.versions.VersionsPanel",
+#         "debug_toolbar.panels.timer.TimerPanel",
+#         "debug_toolbar.panels.settings.SettingsPanel",
+#         "debug_toolbar.panels.headers.HeadersPanel",
+#         "debug_toolbar.panels.request.RequestPanel",
+#         "debug_toolbar.panels.sql.SQLPanel",
+#         "debug_toolbar.panels.staticfiles.StaticFilesPanel",
+#         "debug_toolbar.panels.templates.TemplatesPanel",
+#         "debug_toolbar.panels.cache.CachePanel",
+#         "debug_toolbar.panels.signals.SignalsPanel",
+#         "debug_toolbar.panels.logging.LoggingPanel",
+#         "debug_toolbar.panels.redirects.RedirectsPanel",
+#     ]
 
     # DEBUG_TOOLBAR_CONFIG = {
     #     "INTERCEPT_REDIRECTS": False,
@@ -117,19 +117,19 @@ LOGGING = {
 }
 
 # Config Sentry
-sentry_sdk.init(
-    dsn="https://fa805be7a1eb43e082be46764c45e7e3@o1133698.ingest.sentry.io/6256089",
-    integrations=[DjangoIntegration()],
-
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    # We recommend adjusting this value in production.
-    traces_sample_rate=1.0,
-
-    # If you wish to associate users to errors (assuming you are using
-    # django.contrib.auth) you may enable sending PII data.
-    send_default_pii=True
-)
+# sentry_sdk.init(
+#     dsn="https://fa805be7a1eb43e082be46764c45e7e3@o1133698.ingest.sentry.io/6256089",
+#     integrations=[DjangoIntegration()],
+#
+#     # Set traces_sample_rate to 1.0 to capture 100%
+#     # of transactions for performance monitoring.
+#     # We recommend adjusting this value in production.
+#     traces_sample_rate=1.0,
+#
+#     # If you wish to associate users to errors (assuming you are using
+#     # django.contrib.auth) you may enable sending PII data.
+#     send_default_pii=True
+# )
 
 # DataBase Config
 DATABASES = {
@@ -137,8 +137,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': str(os.getenv('NAME')),
         'USER': str(os.getenv('USER')),
-        'PASSWORD': str(os.getenv('PASSWORD', 'postgres')),
-        'HOST': 'postgresql',
+        'PASSWORD': str(os.getenv('PASSWORD', 'mohammadhssn')),
+        'HOST': 'db',
         'PORT': str(os.getenv('PORT', 5432)),
     }
 }
