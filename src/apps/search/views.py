@@ -38,6 +38,6 @@ class SearchProductInventory(View):
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
 
-            return render(request, self.template_name, {'response': page_obj, 'query': query, 'search':response})
+            return render(request, self.template_name, {'response': page_obj, 'query': query, 'search': response})
         except Exception as e:
             return HttpResponse(e, status=500)

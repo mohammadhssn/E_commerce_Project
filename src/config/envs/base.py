@@ -126,7 +126,7 @@ TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
@@ -151,23 +151,3 @@ AUTHENTICATION_BACKENDS = [
     # 'django.contrib.auth.backends.ModelBackend',
     'apps.account.authenticate.PhoneAuthBackend',
 ]
-
-# # Arvan Cloud Storage
-# # DEFAULT_FILE_STORAGE = config('DEFAULT_FILE_STORAGE')
-# # AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
-# # AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
-# # AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
-# # AWS_SERVICE_NAME = config('AWS_SERVICE_NAME')
-# # AWS_S3_ENDPOINT_URL = config('AWS_S3_ENDPOINT_URL')
-# AWS_S3_FILE_OVERWRITE = False
-# AWS_LOCAL_STORAGE = f'{BASE_DIR}/aws/'
-#
-# # Email backend confirm
-# # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# # EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-# # EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-# # EMAIL_HOST = config('EMAIL_HOST')
-# # EMAIL_PORT = config('EMAIL_PORT')
-# EMAIL_USE_TLS = True
-# DEFAULT_FROM_EMAIL = 'mohammadhssn Website'

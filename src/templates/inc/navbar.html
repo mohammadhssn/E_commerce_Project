@@ -12,7 +12,8 @@
                     </svg>
                 </a>
                 <form class="d-flex w-45" action="{% url 'search:search' %}" method="get">
-                    <input class="form-control me-1" name="q" id="q" type="search" placeholder="Search products"
+                    <input class="form-control me-1" required name="q" id="q" type="search"
+                           placeholder="Search products"
                            aria-label="Search">
                     <button class="btn btn-outline-secondary" type="submit">{% trans 'Search' %}</button>
                 </form>

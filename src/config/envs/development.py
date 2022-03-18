@@ -1,7 +1,7 @@
 from config.envs.base import *
+
 import os
 import sentry_sdk
-
 from sentry_sdk.integrations.django import DjangoIntegration
 from dotenv import load_dotenv
 
@@ -41,7 +41,7 @@ EMAIL_HOST = str(os.getenv('EMAIL_HOST'))
 EMAIL_PORT = os.getenv('EMAIL_PORT')
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'mohammadhssn Website'
-
+# ADMINS = [("mohammadhssnalizadeh78@gmail.com",), ]
 # debug_toolbar settings
 # if DEBUG:
 #     def custom_show_toolbar(request):
@@ -71,9 +71,9 @@ DEFAULT_FROM_EMAIL = 'mohammadhssn Website'
 #         "debug_toolbar.panels.redirects.RedirectsPanel",
 #     ]
 
-    # DEBUG_TOOLBAR_CONFIG = {
-    #     "INTERCEPT_REDIRECTS": False,
-    # }
+# DEBUG_TOOLBAR_CONFIG = {
+#     "INTERCEPT_REDIRECTS": False,
+# }
 
 # Config redis cache
 REDIS_HOST = os.environ.get('REDIS_HOST', '127.0.0.1')
@@ -147,3 +147,11 @@ ESEARCH_HOST = os.environ.get('ESEARCH_HOST', 'localhost:9200')
 ELASTICSEARCH_DSL = {
     'default': {'hosts': ESEARCH_HOST}
 }
+
+# config Celery
+# CELERY_BEAT_SCHEDULE = {
+#     "delete_expired_orders_task": {
+#         "task": 'apps.orders.tasks.delete_expired_orders_task',
+#         "schedule": crontab(),
+#     },
+# }

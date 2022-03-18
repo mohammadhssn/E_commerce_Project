@@ -73,9 +73,7 @@ class DeliveryAddressView(LoginRequiredMixin, View):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request):
-        # one_days = datetime.datetime.now() + timezone.timedelta(days=1)
-        # orders = Order.objects.filter(user=request.user, billing_status=False, created__gt=one_days)
-        # orders.delete()
+
 
         session = request.session
         addresses = Address.objects.filter(customer=request.user).order_by('-default')
