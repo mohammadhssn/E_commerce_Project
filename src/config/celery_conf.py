@@ -9,6 +9,8 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.envs.development')
 celery_app = Celery('config')
 celery_app.autodiscover_tasks()
 
+# celery_app.conf.broker_url = 'redis://redis'
+# celery_app.conf.result_backend = 'redis://redis'
 celery_app.conf.broker_url = 'amqp://rabbitmq'
 celery_app.conf.result_backend = 'rpc://'
 celery_app.conf.task_serializer = 'json'

@@ -19,6 +19,23 @@ services:
       - .env
     restart: always
 
+  #  celery_beat:
+  #    container_name: celery_beat
+  #    command: sh -c "sleep 30 && celery -A config beat -l INFO"
+  #    depends_on:
+  #      - app
+  #      - postgresql
+  #      - rabbitmq
+  #    build:
+  #      context: .
+  #    environment:
+  #      - C_FORCE_ROOT="true"
+  #    networks:
+  #      - main
+  #    env_file:
+  #      - .env
+  #    restart: always
+
   app:
     build:
       context: .

@@ -1,5 +1,5 @@
 from config.envs.base import *
-
+# from celery.schedules import crontab
 import os
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
@@ -152,6 +152,6 @@ ELASTICSEARCH_DSL = {
 # CELERY_BEAT_SCHEDULE = {
 #     "delete_expired_orders_task": {
 #         "task": 'apps.orders.tasks.delete_expired_orders_task',
-#         "schedule": crontab(),
+#         "schedule": crontab(minute="*/1"),
 #     },
 # }

@@ -15,8 +15,9 @@ def send_email_complete_order_task(pk=None):
 
 # @shared_task
 # def delete_expired_orders_task():
+#     print('run tasks1...')
 #     one_days = datetime.datetime.now() - timezone.timedelta(days=1)
 #     orders = Order.objects.filter(billing_status=False, created__gt=one_days)
 #     orders.delete()
-#     print('run tasks...')
+#     print('run tasks2...')
 #     return True
